@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saurashtra University Details</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #34495e;
+            --accent-color: #3498db;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .college-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .college-name {
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .college-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .college-info {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-section h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .achievement-list {
+            list-style-type: none;
+        }
+
+        .achievement-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .achievement-list li::before {
+            content: "\f0a4";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+
+        .college-website {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.7rem 1.5rem;
+            background: var(--accent-color);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .college-website:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .review-section {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-form {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #ecf0f1;
+        }
+
+        .review-form h3 {
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ecf0f1;
+            border-radius: 5px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+        }
+
+        .submit-review {
+            background-color: var(--accent-color);
+            color: #fff;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-review:hover {
+            background-color: #2980b9;
+        }
+
+        .user-reviews {
+            margin-top: 2rem;
+        }
+
+        .user-review {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-review .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-review .review-author {
+            font-weight: bold;
+        }
+
+        .star-rating {
+            color: gold;
+        }
+
+        .star-rating span {
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .review-summary {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .rating-breakdown {
+                margin-top: 1rem;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="college-header">
+            <h1 class="college-name">Marwadi University</h1>
+            <img src="{{ url_for('static', filename='images/marwadi_detail.jpg') }}" alt="University Image" class="college-image">
+
+        </div>
+
+        <div class="college-info">
+            <div class="info-section">
+                <h2>University Details</h2>
+                <p>Saurashtra University is a public university located in Rajkot, Gujarat, India. It was established in 1967 and offers a wide range of undergraduate and postgraduate programs across various disciplines.</p>
+            </div>
+
+            <div class="info-section">
+                <h2>Achievements</h2>
+                <ul class="achievement-list">
+                    <li>Ranked among the top universities in Gujarat</li>
+                    <li>Offers a variety of interdisciplinary programs</li>
+                    <li>Has strong industry collaborations</li>
+                </ul>
+            </div>
+
+            <div class="info-section">
+                <a href="https://www.saurashtrauniversity.edu" class="college-website" target="_blank">Visit College Website</a>
+            </div>
+        </div>
+
+        <div class="review-section">
+            <h3>Reviews</h3>
+            <div class="review-form">
+                <h3>Submit Your Review</h3>
+                <form method="POST" action="{{ url_for('submit_review') }}">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="review">Review:</label>
+                        <textarea id="review" name="review" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-review">Submit Review</button>
+                </form>
+            </div>
+
+            <div class="user-reviews">
+                <h3>User Reviews</h3>
+                {% for review in reviews %}
+                <div class="user-review">
+                    <div class="review-header">
+                        <span class="review-author">{{ review['name'] }}</span>
+                        <span class="star-rating">
+                            {% for i in range(5) %}
+                                {% if i < review['rating'] %}
+                                    ★
+                                {% else %}
+                                    ☆
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                    </div>
+                    <p>{{ review['review'] }}</p>
+                    {% if review['rating'] < 3 %}
+                    <div class="feedback-form">
+                        <h4>Provide Additional Feedback</h4>
+                        <div class="form-group">
+                            <label for="additional_feedback">Additional Feedback:</label>
+                            <textarea id="additionalFeedback" name="additional_feedback" required></textarea>
+                        </div>
+                        <button id="sendFeedbackButton" class="submit-review">Send Feedback</button>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('sendFeedbackButton').addEventListener('click', () => {
+            const additionalFeedback = document.getElementById('additionalFeedback').value;
+            const email = 'aryanpatel1826@gmail.com';  // Replace with your email or recipient email
+
+            // Check if feedback is provided
+            if (additionalFeedback.trim() !== '') {
+                // Construct the mailto link with the feedback content
+                const subject = 'Additional Feedback';
+                const body = encodeURIComponent(additionalFeedback);  // Ensure the feedback is URL-encoded for safe transmission
+
+                // Use the mailto protocol to open the user's default email client
+                window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${body}`;
+
+                // Hide feedback form after sending email
+                document.querySelector('.feedback-form').style.display = 'none';
+                document.getElementById('additionalFeedback').value = '';  // Clear the textarea
+            } else {
+                alert("Please enter feedback before sending.");
+            }
+        });
+    </script>
+    </script>
+</body>
+</html>
