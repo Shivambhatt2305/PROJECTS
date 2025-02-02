@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare - Your Health, Our Priority</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+        :root {
+            --primary-color: #0077be;
+            --secondary-color: #ff6347;
+            --background-color: #f0f8ff;
+            --text-color: #333;
+            --white: #fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem 0;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            background: rgba(255, 255, 255, 1);
+            padding: 0.5rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section Styles */
+        .hero {
+            background: url('https://i.ibb.co/1fDBbkGL/image.png') no-repeat center center/cover;
+            height: 100vh;
+            position: relative;
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 119, 190, 0.7), rgba(0, 0, 0, 0.7));
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.5s;
+            animation-fill-mode: both;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            background: #ff4500;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+        .emergency-btn {
+            background: #ff0000;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 15px 40px;
+            margin-top: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Main Content Styles */
+        main {
+            padding: 6rem 0;
+        }
+
+        .section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 3px;
+            background: var(--secondary-color);
+            margin: 10px auto;
+        }
+
+        .about-content, .features {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .about-text, .feature-text {
+            flex: 1;
+            min-width: 300px;
+            padding: 1rem;
+        }
+
+        .about-image, .feature-image {
+            flex: 1;
+            min-width: 300px;
+            padding: 1rem;
+        }
+
+        .about-image img, .feature-image img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .about-image img:hover, .feature-image img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Footer Styles */
+        footer {
+            background: #333;
+            color: var(--white);
+            padding: 3rem 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .contact-form {
+            flex: 1 1 300px;
+            margin-right: 2rem;
+        }
+
+        .contact-form h3 {
+            margin-bottom: 1rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1rem;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .contact-form textarea {
+            height: 100px;
+        }
+
+        .contact-info {
+            flex: 1 1 300px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: modalFadeIn 0.5s;
+        }
+
+        @keyframes modalFadeIn {
+            from {opacity: 0; transform: translateY(-50px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 90%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .about-content, .features {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                width: 80%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">MediCare</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#register">Register</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Welcome to MediCare</h1>
+            <p>Revolutionizing healthcare management with cutting-edge technology. Your health is our top priority.</p>
+            <a href="#register" class="btn">Get Started</a>
+            <button class="btn emergency-btn" id="emergencyBtn">Emergency</button>
+        </div>
+    </section>
+
+    <main>
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="section-title">About Us</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>MediCare is a pioneering healthcare management platform dedicated to improving patient care and streamlining medical processes. Our team of experienced healthcare professionals and tech experts work tirelessly to bring you the most innovative solutions in the industry.</p>
+                        <p>With a focus on user-friendly interfaces and robust functionality, we aim to empower both patients and healthcare providers, fostering a more efficient and effective healthcare ecosystem.</p>
+                    </div>
+                    <div class="about-image">
+                        <img src="https://i.ibb.co/Y7n9zfMb/image.png" alt="Healthcare professionals">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="section">
+            <div class="container">
+                <h2 class="section-title">What Our Software Does</h2>
+                <div class="features">
+                    <div class="feature-card">
+                        <i class="fas fa-user-md feature-icon"></i>
+                        <h3>Patient Management</h3>
+                        <p>Efficiently manage patient records, appointments, and treatment plans all in one place.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-video feature-icon"></i>
+                        <h3>Telemedicine</h3>
+                        <p>Connect with healthcare providers remotely through secure video consultations.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-pills feature-icon"></i>
+                        <h3>Prescription Management</h3>
+                        <p>Easily prescribe, track, and manage medications for patients with our integrated system.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line feature-icon"></i>
+                        <h3>Health Analytics</h3>
+                        <p>Gain valuable insights into patient health trends and treatment outcomes with advanced analytics.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-calendar-check feature-icon"></i>
+                        <h3>Check-up </h3>
+                        <p>Easily schedule and manage regular check-ups and follow-up appointments for patients.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-ambulance feature-icon"></i>
+                        <h3>Emergency Services</h3>
+                        <p>Quick access to emergency services and real-time ambulance tracking for critical situations.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact"><footer id="contact">
+        <div class="container footer-content">
+            <div class="contact-form">
+                <h3>Contact Us</h3>
+                <form id="contactForm">
+                    <input type="text" id="name" placeholder="Your Name" required>
+                    <textarea id="message" placeholder="Your Message" required></textarea>
+                    <button type="submit" class="btn">Send Message</button>
+                </form>
+            </div>
+            <div class="contact-info">
+                <h3>Get in Touch</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Rajkot</p>
+                <p><i class="fas fa-phone"></i> +91 9999999999</p>
+                <p><i class="fas fa-envelope"></i> info@medicare.com</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="emergencyModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Emergency Services</h2>
+            <p>Redirecting to ambulance map...</p>
+            <div id="map" style="width: 100%; height: 300px; background-color: #eee; margin-top: 20px;">
+                Map placeholder
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Emergency button functionality
+        const emergencyBtn = document.getElementById('emergencyBtn');
+        const emergencyModal = document.getElementById('emergencyModal');
+        const closeBtn = document.getElementsByClassName('close')[0];
+
+        emergencyBtn.onclick = function() {
+            emergencyModal.style.display = "block";
+            console.log("Redirecting to ambulance map...");
+        }
+
+        closeBtn.onclick = function() {
+            emergencyModal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == emergencyModal) {
+                emergencyModal.style.display = "none";
+            }
+        }
+
+        // Contact form functionality
+        const contactForm = document.getElementById('contactForm');
+
+        contactForm.onsubmit = function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const message = document.getElementById('message').value;
+
+            // Email functionality
+            const subject = encodeURIComponent(`New message from ${name}`);
+            const body = encodeURIComponent(`Name: ${name}\n\nMessage:\n${message}`);
+            const mailtoLink = `mailto:shisa3023@gmail.com?subject=${subject}&body=${body}`;
+
+            window.location.href = mailtoLink;
+
+            console.log(`New message from ${name}: ${message}`);
+            alert('Thank you for your message. We will get back to you soon!');
+            contactForm.reset();
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Header background change on scroll
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            header.classList.toggle('scrolled', window.scrollY > 0);
+        });
+    </script>
+</body>
+</html>
