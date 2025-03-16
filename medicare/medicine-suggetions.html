@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #e63946;
+            --primary-dark: #c1121f;
+            --primary-light: #f48c95;
+            --secondary-color: #f1faee;
+            --text-color: #1d3557;
+            --accent-color: #457b9d;
+            --light-bg: #f8f9fa;
+            --dark-bg: #212529;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --hover-shadow: 0 10px 25px rgba(230, 57, 70, 0.2);
+            --border-radius: 12px;
+            --spacing-xs: 5px;
+            --spacing-sm: 10px;
+            --spacing-md: 15px;
+            --spacing-lg: 20px;
+            --spacing-xl: 30px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+            flex: 1;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: var(--spacing-md);
+            position: relative;
+            display: inline-block;
+        }
+
+        header h1 i {
+            margin-right: var(--spacing-md);
+            animation: pulse 2s infinite;
+        }
+
+        header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        main {
+            display: flex;
+            gap: var(--spacing-xl);
+            min-height: 600px;
+        }
+
+        .diseases-panel {
+            flex: 0 0 350px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: var(--spacing-lg);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            max-height: 80vh;
+            position: sticky;
+            top: var(--spacing-lg);
+        }
+
+        .diseases-panel h2 {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-lg);
+            font-size: 1.8rem;
+            border-bottom: 3px solid var(--primary-light);
+            padding-bottom: var(--spacing-md);
+            position: relative;
+        }
+
+        .diseases-panel h2::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        .search-box {
+            margin-bottom: var(--spacing-md);
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: 2px solid var(--secondary-color);
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-light);
+        }
+
+        .search-box i {
+            position: absolute;
+            right: var(--spacing-lg);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+        }
+
+        .disease-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            overflow-y: auto;
+            padding-right: var(--spacing-sm);
+            flex: 1;
+        }
+
+        .disease-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .disease-list::-webkit-scrollbar-track {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+
+        .disease-list::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 10px;
+        }
+
+        .disease-item {
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid transparent;
+        }
+
+        .disease-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--hover-shadow);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .disease-item.active {
+            background-color: var(--primary-light);
+            color: white;
+            border-left: 4px solid var(--primary-dark);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .disease-item i {
+            font-size: 1.8rem;
+            margin-right: var(--spacing-md);
+            color: var(--primary-color);
+            width: 40px;
+            text-align: center;
+        }
+
+        .disease-item.active i {
+            color: white;
+        }
+
+        .disease-item h3 {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .disease-item p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .content-panel {
+            flex: 1;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-body {
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .content-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .content-body::-webkit-scrollbar-track {
+            background: var(--secondary-color);
+            border-radius: 10px;
+        }
+
+        .content-body::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 10px;
+        }
+
+        .content-section {
+            margin-bottom: var(--spacing-xl);
+            background-color: var(--light-bg);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .content-section h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .content-section h3 i {
+            margin-right: var(--spacing-md);
+            font-size: 1.3rem;
+        }
+
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .solution-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--primary-color);
+            height: 100%;
+        }
+
+        .solution-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .solution-card h4 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+        }
+
+        .solution-card h4 i {
+            margin-right: var(--spacing-sm);
+            color: var(--primary-color);
+        }
+
+        .solution-card p {
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .medicines-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .medicine-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--secondary-color);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .medicine-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--primary-light);
+        }
+
+        .medicine-card h4 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .medicine-card h4 span {
+            background-color: var(--primary-light);
+            color: white;
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .medicine-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .medicine-info p {
+            display: flex;
+            align-items: center;
+        }
+
+        .medicine-info p i {
+            color: var(--primary-color);
+            margin-right: var(--spacing-sm);
+            width: 20px;
+        }
+
+        .doctors-section {
+            margin-top: var(--spacing-xl);
+        }
+
+        .doctors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .doctor-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid var(--secondary-color);
+            height: 100%;
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--primary-light);
+        }
+
+        .doctor-image {
+            height: 150px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .doctor-image i {
+            font-size: 4rem;
+            color: white;
+        }
+
+        .doctor-info {
+            padding: var(--spacing-lg);
+        }
+
+        .doctor-info h4 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .doctor-info p {
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+        }
+
+        .doctor-info p i {
+            color: var(--primary-color);
+            margin-right: var(--spacing-sm);
+            width: 20px;
+        }
+
+        .doctor-info .rating {
+            color: gold;
+            font-size: 1.1rem;
+            margin-top: var(--spacing-sm);
+        }
+
+        .medical-stores {
+            margin-top: var(--spacing-xl);
+        }
+
+        .stores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .store-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid var(--secondary-color);
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .store-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--primary-light);
+        }
+
+        .store-header {
+            background: linear-gradient(to right, var(--primary-light), var(--primary-color));
+            color: white;
+            padding: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .store-header h4 {
+            font-size: 1.2rem;
+        }
+
+        .store-header i {
+            font-size: 1.5rem;
+        }
+
+        .store-info {
+            padding: var(--spacing-lg);
+        }
+
+        .store-info p {
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+        }
+
+        .store-info p i {
+            color: var(--primary-color);
+            margin-right: var(--spacing-sm);
+            width: 20px;
+        }
+
+        .store-info .distance {
+            background-color: var(--secondary-color);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            margin-top: var(--spacing-sm);
+        }
+
+        .store-info .distance i {
+            margin-right: 8px;
+        }
+
+        .map-container {
+            margin-top: var(--spacing-xl);
+            height: 400px;
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            position: relative;
+            display: none;
+        }
+
+        .map-container.active {
+            display: block;
+        }
+
+        .map-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+        }
+
+        .map-placeholder i {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .map-placeholder p {
+            font-size: 1.2rem;
+        }
+
+        .welcome-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .welcome-message i {
+            font-size: 5rem;
+            color: var(--primary-light);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .welcome-message h2 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .welcome-message p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .welcome-message .arrow {
+            color: var(--primary-color);
+            font-size: 2rem;
+            animation: bounceLeft 2s infinite;
+            margin-top: var(--spacing-lg);
+        }
+
+        @keyframes bounceLeft {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-20px); }
+        }
+
+        footer {
+            background-color: var(--dark-bg);
+            color: white;
+            text-align: center;
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+            border-radius: var(--border-radius);
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        /* Loading animation */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            padding: var(--spacing-xl);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--secondary-color);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--primary-color);
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            main {
+                flex-direction: column;
+            }
+
+            .diseases-panel {
+                max-width: 100%;
+                position: static;
+                max-height: none;
+            }
+
+            .disease-list {
+                max-height: 400px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .solutions-grid,
+            .medicines-list,
+            .doctors-grid,
+            .stores-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 2.2rem;
+            }
+
+            header p {
+                font-size: 1.1rem;
+            }
+
+            .content-section {
+                padding: var(--spacing-md);
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .diseases-panel, footer, .map-container {
+                display: none;
+            }
+
+            .content-panel {
+                box-shadow: none;
+            }
+
+            .content-body {
+                padding: 0;
+            }
+
+            .solution-card, .medicine-card, .doctor-card, .store-card {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-heartbeat"></i> MediCare</h1>
+            <!-- <p>Your personal health assistant for medicine suggestions and healthcare guidance</p> -->
+        </header>
+
+        <main>
+            <div class="diseases-panel">
+                <h2>Common Diseases</h2>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search diseases...">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="disease-list" id="diseaseList">
+                    <!-- Disease items will be loaded here -->
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-panel">
+                <div id="welcomeScreen" class="welcome-message">
+                    <i class="fas fa-hand-holding-medical"></i>
+                    <h2>Welcome to MediGuide</h2>
+                    <p>Select a disease from the list on the left to view recommended solutions, medicines, and healthcare providers.</p>
+                    <div class="arrow">
+                        <i class="fas fa-arrow-left"></i>
+                    </div>
+                </div>
+
+                <div id="diseaseContent" style="display: none; height: 100%;">
+                    <div class="content-body">
+                        <div class="content-section">
+                            <h3><i class="fas fa-check-circle"></i> Recommended Solutions</h3>
+                            <div id="solutionsContainer">
+                                <div class="solutions-grid" id="solutionsGrid">
+                                    <!-- Solution cards will be loaded here -->
+                                    <div class="loading">
+                                        <div class="loading-spinner"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="content-section">
+                            <h3><i class="fas fa-pills"></i> Recommended Medicines</h3>
+                            <div id="medicinesContainer">
+                                <div class="medicines-list" id="medicinesList">
+                                    <!-- Medicine cards will be loaded here -->
+                                    <div class="loading">
+                                        <div class="loading-spinner"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="content-section doctors-section">
+                            <h3><i class="fas fa-user-md"></i> Recommended Doctors</h3>
+                            <div id="doctorsContainer">
+                                <div class="doctors-grid" id="doctorsGrid">
+                                    <!-- Doctor cards will be loaded here -->
+                                    <div class="loading">
+                                        <div class="loading-spinner"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="content-section medical-stores">
+                            <h3><i class="fas fa-clinic-medical"></i> Nearby Medical Stores</h3>
+                            <div id="storesContainer">
+                                <div class="stores-grid" id="storesGrid">
+                                    <!-- Store cards will be loaded here -->
+                                    <div class="loading">
+                                        <div class="loading-spinner"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="map-container" id="mapContainer">
+                            <div class="map-placeholder">
+                                <i class="fas fa-map-marked-alt"></i>
+                                <p>Map will be displayed here when you select a medical store.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 MediGuide - Your Health Companion</p>
+        </footer>
+    </div>
+
+    <script>
+        // Static data to replace database content
+        const diseases = [
+            { id: 1, name: "Fever", icon: "fa-thermometer-full", description: "An abnormal increase in body temperature, often a sign that your body is fighting an infection." },
+            { id: 2, name: "Cough", icon: "fa-head-side-cough", description: "A sudden expulsion of air from the lungs that helps clear the lung airways of fluids, mucus, or material." },
+            { id: 3, name: "Headache", icon: "fa-head-side-virus", description: "Pain in any region of the head. Headaches may occur on one or both sides of the head, be isolated to a certain location, or radiate across the head." },
+            { id: 4, name: "Common Cold", icon: "fa-virus", description: "A viral infectious disease of the upper respiratory tract that primarily affects the nose and throat." },
+            { id: 5, name: "Allergies", icon: "fa-lungs-virus", description: "An abnormal immune response to substances (allergens) that are typically harmless to most people." },
+            { id: 6, name: "Hypertension", icon: "fa-heart-pulse", description: "A condition in which the force of the blood against the artery walls is too high, often called the 'silent killer'." },
+            { id: 7, name: "Diabetes", icon: "fa-syringe", description: "A metabolic disease that causes high blood sugar due to problems with insulin production or function." }
+        ];
+
+        const stores = [
+            { id: 1, name: "City Pharmacy", address: "123 Main Street, Downtown", contact: "+1 (555) 123-4567", distance: "0.8 miles" },
+            { id: 2, name: "HealthPlus Drugstore", address: "456 Oak Avenue, Westside", contact: "+1 (555) 987-6543", distance: "1.5 miles" },
+            { id: 3, name: "MediCare Pharmacy", address: "789 Pine Road, Northside", contact: "+1 (555) 456-7890", distance: "2.3 miles" }
+        ];
+
+        // Sample medicines data
+        const medicinesData = {
+            1: [ // Fever
+                { id: 1, name: "Acetaminophen", type: "Analgesic", dosage: "500-1000mg", frequency: "Every 4-6 hours", side_effects: "Rare at recommended doses" },
+                { id: 2, name: "Ibuprofen", type: "NSAID", dosage: "200-400mg", frequency: "Every 4-6 hours", side_effects: "Stomach upset, heartburn" },
+                { id: 3, name: "Aspirin", type: "NSAID", dosage: "325-650mg", frequency: "Every 4 hours", side_effects: "Stomach irritation, increased bleeding risk" }
+            ],
+            2: [ // Cough
+                { id: 4, name: "Dextromethorphan", type: "Cough Suppressant", dosage: "10-20mg", frequency: "Every 4 hours", side_effects: "Drowsiness, dizziness" },
+                { id: 5, name: "Guaifenesin", type: "Expectorant", dosage: "200-400mg", frequency: "Every 4 hours", side_effects: "Nausea, stomach pain" },
+                { id: 6, name: "Benzonatate", type: "Antitussive", dosage: "100-200mg", frequency: "Three times daily", side_effects: "Headache, drowsiness, dizziness" }
+            ],
+            3: [ // Headache
+                { id: 7, name: "Acetaminophen", type: "Analgesic", dosage: "500-1000mg", frequency: "Every 4-6 hours", side_effects: "Rare at recommended doses" },
+                { id: 8, name: "Ibuprofen", type: "NSAID", dosage: "200-400mg", frequency: "Every 4-6 hours", side_effects: "Stomach upset, heartburn" },
+                { id: 9, name: "Naproxen", type: "NSAID", dosage: "220-440mg", frequency: "Every 8-12 hours", side_effects: "Stomach upset, heartburn, dizziness" }
+            ],
+            4: [ // Common Cold
+                { id: 10, name: "Phenylephrine", type: "Decongestant", dosage: "10mg", frequency: "Every 4 hours", side_effects: "Nervousness, dizziness, increased blood pressure" },
+                { id: 11, name: "Loratadine", type: "Antihistamine", dosage: "10mg", frequency: "Once daily", side_effects: "Drowsiness, dry mouth" },
+                { id: 12, name: "Zinc Lozenges", type: "Supplement", dosage: "10-15mg", frequency: "Every 2 hours", side_effects: "Nausea, bad taste" }
+            ],
+            5: [ // Allergies
+                { id: 13, name: "Cetirizine", type: "Antihistamine", dosage: "5-10mg", frequency: "Once daily", side_effects: "Drowsiness, dry mouth" },
+                { id: 14, name: "Fexofenadine", type: "Antihistamine", dosage: "60-180mg", frequency: "Once daily", side_effects: "Headache, back pain" },
+                { id: 15, name: "Fluticasone", type: "Nasal Steroid", dosage: "1-2 sprays per nostril", frequency: "Once daily", side_effects: "Nasal irritation, headache" }
+            ],
+            6: [ // Hypertension
+                { id: 16, name: "Lisinopril", type: "ACE Inhibitor", dosage: "10-40mg", frequency: "Once daily", side_effects: "Dry cough, dizziness" },
+                { id: 17, name: "Amlodipine", type: "Calcium Channel Blocker", dosage: "5-10mg", frequency: "Once daily", side_effects: "Swelling, flushing" },
+                { id: 18, name: "Hydrochlorothiazide", type: "Diuretic", dosage: "12.5-25mg", frequency: "Once daily", side_effects: "Increased urination, electrolyte imbalance" }
+            ],
+            7: [ // Diabetes
+                { id: 19, name: "Metformin", type: "Biguanide", dosage: "500-1000mg", frequency: "Twice daily", side_effects: "Nausea, diarrhea, stomach upset" },
+                { id: 20, name: "Glipizide", type: "Sulfonylurea", dosage: "5-10mg", frequency: "Once daily", side_effects: "Hypoglycemia, weight gain" },
+                { id: 21, name: "Insulin", type: "Hormone", dosage: "Varies", frequency: "As directed", side_effects: "Hypoglycemia, weight gain, injection site reactions" }
+            ]
+        };
+
+        // Sample doctors data
+        const doctorsData = {
+            1: [ // Fever
+                { id: 1, name: "Dr. Sarah Johnson", specialty: "General Physician", contact: "+1 (555) 111-2222", rating: 4.8 },
+                { id: 2, name: "Dr. Michael Chen", specialty: "Internal Medicine", contact: "+1 (555) 333-4444", rating: 4.5 },
+                { id: 3, name: "Dr. Emily Rodriguez", specialty: "Family Medicine", contact: "+1 (555) 555-6666", rating: 4.7 }
+            ],
+            2: [ // Cough
+                { id: 4, name: "Dr. Robert Williams", specialty: "Pulmonologist", contact: "+1 (555) 777-8888", rating: 4.9 },
+                { id: 5, name: "Dr. Lisa Thompson", specialty: "General Physician", contact: "+1 (555) 999-0000", rating: 4.6 },
+                { id: 6, name: "Dr. David Kim", specialty: "ENT Specialist", contact: "+1 (555) 123-7890", rating: 4.8 }
+            ],
+            3: [ // Headache
+                { id: 7, name: "Dr. Jennifer Lee", specialty: "Neurologist", contact: "+1 (555) 456-7891", rating: 4.9 },
+                { id: 8, name: "Dr. Thomas Brown", specialty: "Pain Management", contact: "+1 (555) 234-5678", rating: 4.7 },
+                { id: 9, name: "Dr. Amanda Clark", specialty: "General Physician", contact: "+1 (555) 890-1234", rating: 4.5 }
+            ],
+            4: [ // Common Cold
+                { id: 10, name: "Dr. James Wilson", specialty: "Family Medicine", contact: "+1 (555) 345-6789", rating: 4.6 },
+                { id: 11, name: "Dr. Patricia Moore", specialty: "General Physician", contact: "+1 (555) 678-9012", rating: 4.4 },
+                { id: 12, name: "Dr. Kevin Taylor", specialty: "ENT Specialist", contact: "+1 (555) 901-2345", rating: 4.8 }
+            ],
+            5: [ // Allergies
+                { id: 13, name: "Dr. Susan Martinez", specialty: "Allergist", contact: "+1 (555) 432-1098", rating: 4.9 },
+                { id: 14, name: "Dr. Richard White", specialty: "Immunologist", contact: "+1 (555) 765-4321", rating: 4.7 },
+                { id: 15, name: "Dr. Nancy Garcia", specialty: "Pulmonologist", contact: "+1 (555) 098-7654", rating: 4.6 }
+            ],
+            6: [ // Hypertension
+                { id: 16, name: "Dr. Charles Davis", specialty: "Cardiologist", contact: "+1 (555) 321-6547", rating: 4.9 },
+                { id: 17, name: "Dr. Elizabeth Smith", specialty: "Internal Medicine", contact: "+1 (555) 654-9870", rating: 4.7 },
+                { id: 18, name: "Dr. Daniel Johnson", specialty: "Nephrologist", contact: "+1 (555) 987-6541", rating: 4.8 }
+            ],
+            7: [ // Diabetes
+                { id: 19, name: "Dr. Margaret Lewis", specialty: "Endocrinologist", contact: "+1 (555) 147-2583", rating: 4.9 },
+                { id: 20, name: "Dr. Joseph Harris", specialty: "Internal Medicine", contact: "+1 (555) 369-1470", rating: 4.6 },
+                { id: 21, name: "Dr. Barbara Martin", specialty: "Diabetologist", contact: "+1 (555) 258-1470", rating: 4.8 }
+            ]
+        };
+
+        // Sample solutions data
+        const solutionsData = {
+            1: [ // Fever
+                { title: "Rest and Hydration", description: "Get plenty of rest and drink fluids to stay hydrated. This helps your body fight the infection causing the fever." },
+                { title: "Cool Compress", description: "Apply a cool, damp washcloth to your forehead or wrists to help reduce body temperature." },
+                { title: "Light Clothing", description: "Wear lightweight clothing and use light blankets to avoid overheating." }
+            ],
+            2: [ // Cough
+                { title: "Stay Hydrated", description: "Drink plenty of fluids to thin mucus and soothe an irritated throat." },
+                { title: "Honey and Warm Water", description: "Mix honey with warm water or tea to soothe throat irritation (not for children under 1 year)." },
+                { title: "Humidifier", description: "Use a humidifier to add moisture to the air, which can help ease coughing." }
+            ],
+            3: [ // Headache
+                { title: "Rest in a Dark Room", description: "Lie down in a quiet, dark room to reduce sensory stimulation that can worsen headaches." },
+                { title: "Cold or Warm Compress", description: "Apply a cold or warm compress to your forehead or neck, depending on what provides relief." },
+                { title: "Hydration", description: "Drink plenty of water as dehydration can trigger or worsen headaches." }
+            ],
+            4: [ // Common Cold
+                { title: "Rest", description: "Get plenty of sleep to help your body fight the infection." },
+                { title: "Hydration", description: "Drink plenty of fluids like water, juice, and clear broth to prevent dehydration." },
+                { title: "Gargle Salt Water", description: "Gargle with salt water to relieve a sore or scratchy throat." }
+            ],
+            5: [ // Allergies
+                { title: "Identify Triggers", description: "Try to identify and avoid allergens that trigger your symptoms." },
+                { title: "Air Purifiers", description: "Use HEPA air purifiers to reduce airborne allergens in your home." },
+                { title: "Nasal Irrigation", description: "Use a saline nasal rinse to flush out allergens from your nasal passages." }
+            ],
+            6: [ // Hypertension
+                { title: "Reduce Sodium", description: "Limit salt intake to help lower blood pressure." },
+                { title: "Regular Exercise", description: "Engage in regular physical activity, at least 30 minutes most days of the week." },
+                { title: "Stress Management", description: "Practice stress-reduction techniques like meditation, deep breathing, or yoga." }
+            ],
+            7: [ // Diabetes
+                { title: "Balanced Diet", description: "Follow a balanced diet rich in fruits, vegetables, and whole grains while limiting refined carbs." },
+                { title: "Regular Exercise", description: "Engage in regular physical activity to help control blood sugar levels." },
+                { title: "Monitor Blood Sugar", description: "Regularly check your blood sugar levels as recommended by your healthcare provider." }
+            ]
+        };
+
+        // DOM elements
+        const diseaseList = document.getElementById('diseaseList');
+        const searchInput = document.getElementById('searchInput');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const diseaseContent = document.getElementById('diseaseContent');
+        const solutionsGrid = document.getElementById('solutionsGrid');
+        const medicinesList = document.getElementById('medicinesList');
+        const doctorsGrid = document.getElementById('doctorsGrid');
+        const storesGrid = document.getElementById('storesGrid');
+        const mapContainer = document.getElementById('mapContainer');
+        const solutionsContainer = document.getElementById('solutionsContainer');
+        const medicinesContainer = document.getElementById('medicinesContainer');
+        const doctorsContainer = document.getElementById('doctorsContainer');
+        const storesContainer = document.getElementById('storesContainer');
+
+        // Initialize the page
+        function initPage() {
+            loadDiseases();
+            setupEventListeners();
+        }
+
+        // Load diseases into the list
+        function loadDiseases() {
+            diseaseList.innerHTML = '';
+            
+            if (diseases.length === 0) {
+                diseaseList.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>No diseases found in the database.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            diseases.forEach(disease => {
+                const diseaseItem = document.createElement('div');
+                diseaseItem.className = 'disease-item';
+                diseaseItem.dataset.id = disease.id;
+                
+                // Set default icon if not provided
+                const icon = disease.icon || 'fa-virus';
+                
+                diseaseItem.innerHTML = `
+                    <i class="fas ${icon}"></i>
+                    <div>
+                        <h3>${disease.name}</h3>
+                        <p>Common condition</p>
+                    </div>
+                `;
+                
+                diseaseItem.addEventListener('click', () => {
+                    // Remove active class from all items
+                    document.querySelectorAll('.disease-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked item
+                    diseaseItem.classList.add('active');
+                    
+                    // Load disease details
+                    loadDiseaseDetails(disease.id);
+                });
+                
+                diseaseList.appendChild(diseaseItem);
+            });
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                filterDiseases(searchTerm);
+            });
+        }
+
+        // Filter diseases based on search term
+        function filterDiseases(searchTerm) {
+            const diseaseItems = diseaseList.querySelectorAll('.disease-item');
+            let hasResults = false;
+            
+            diseaseItems.forEach(item => {
+                const diseaseName = item.querySelector('h3').textContent.toLowerCase();
+                if (diseaseName.includes(searchTerm)) {
+                    item.style.display = 'flex';
+                    hasResults = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Show no results message if needed
+            if (!hasResults && searchTerm !== '') {
+                if (!document.querySelector('.no-results')) {
+                    const noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.innerHTML = `
+                        <i class="fas fa-search"></i>
+                        <p>No diseases found matching "${searchTerm}"</p>
+                    `;
+                    diseaseList.appendChild(noResults);
+                }
+            } else {
+                const noResults = document.querySelector('.no-results');
+                if (noResults) {
+                    noResults.remove();
+                }
+            }
+        }
+
+        // Load disease details
+        function loadDiseaseDetails(diseaseId) {
+            // Show loading state
+            welcomeScreen.style.display = 'none';
+            diseaseContent.style.display = 'flex';
+            
+            // Show loading spinners
+            solutionsGrid.innerHTML = '<div class="loading"><div class="loading-spinner"></div></div>';
+            medicinesList.innerHTML = '<div class="loading"><div class="loading-spinner"></div></div>';
+            doctorsGrid.innerHTML = '<div class="loading"><div class="loading-spinner"></div></div>';
+            storesGrid.innerHTML = '<div class="loading"><div class="loading-spinner"></div></div>';
+            
+            // Find the disease by ID
+            const disease = diseases.find(d => d.id == diseaseId);
+            
+            if (disease) {
+                // Load solutions
+                loadSolutions(diseaseId);
+                
+                // Load medicines
+                displayMedicines(medicinesData[diseaseId] || []);
+                
+                // Load doctors
+                displayDoctors(doctorsData[diseaseId] || []);
+                
+                // Display medical stores
+                displayStores(stores);
+            }
+        }
+
+        // Load solutions for the selected disease
+        function loadSolutions(diseaseId) {
+            const solutions = solutionsData[diseaseId] || [];
+            
+            if (solutions.length === 0) {
+                solutionsGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>No solutions available for this condition.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            solutionsGrid.innerHTML = '';
+            
+            solutions.forEach(solution => {
+                const solutionCard = document.createElement('div');
+                solutionCard.className = 'solution-card';
+                
+                solutionCard.innerHTML = `
+                    <h4><i class="fas fa-check-circle"></i> ${solution.title}</h4>
+                    <p>${solution.description}</p>
+                `;
+                
+                solutionsGrid.appendChild(solutionCard);
+            });
+        }
+
+        // Display medicines
+        function displayMedicines(medicines) {
+            if (medicines.length === 0) {
+                medicinesList.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>No medicines available for this condition.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            medicinesList.innerHTML = '';
+            
+            medicines.forEach(medicine => {
+                const medicineCard = document.createElement('div');
+                medicineCard.className = 'medicine-card';
+                
+                // Set default values if not provided
+                const dosage = medicine.dosage || 'As directed';
+                const frequency = medicine.frequency || 'As needed';
+                const type = medicine.type || 'Medication';
+                
+                medicineCard.innerHTML = `
+                    <h4>${medicine.name} <span>${type}</span></h4>
+                    <div class="medicine-info">
+                        <p><i class="fas fa-prescription"></i> <strong>Dosage:</strong> ${dosage}</p>
+                        <p><i class="fas fa-clock"></i> <strong>Frequency:</strong> ${frequency}</p>
+                        ${medicine.side_effects ? `<p><i class="fas fa-exclamation-triangle"></i> <strong>Side Effects:</strong> ${medicine.side_effects}</p>` : ''}
+                    </div>
+                `;
+                
+                medicinesList.appendChild(medicineCard);
+            });
+        }
+
+        // Display doctors
+        function displayDoctors(doctors) {
+            if (doctors.length === 0) {
+                doctorsGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>No doctors available for this condition.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            doctorsGrid.innerHTML = '';
+            
+            doctors.forEach(doctor => {
+                const doctorCard = document.createElement('div');
+                doctorCard.className = 'doctor-card';
+                
+                // Set default rating if not provided
+                const rating = doctor.rating || 4.0;
+                
+                doctorCard.innerHTML = `
+                    <div class="doctor-image">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <div class="doctor-info">
+                        <h4>${doctor.name}</h4>
+                        <p><i class="fas fa-stethoscope"></i> ${doctor.specialty || 'Specialist'}</p>
+                        <p><i class="fas fa-phone"></i> ${doctor.contact || 'Contact not available'}</p>
+                        <div class="rating">
+                            ${'★'.repeat(Math.floor(rating))}${'☆'.repeat(5 - Math.floor(rating))}
+                            <span>(${rating})</span>
+                        </div>
+                    </div>
+                `;
+                
+                doctorsGrid.appendChild(doctorCard);
+            });
+        }
+
+        // Display medical stores
+        function displayStores(stores) {
+            if (stores.length === 0) {
+                storesGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>No medical stores available in your area.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            storesGrid.innerHTML = '';
+            
+            stores.forEach(store => {
+                const storeCard = document.createElement('div');
+                storeCard.className = 'store-card';
+                
+                // Calculate distance (in a real app, this would be based on user's location)
+                const distance = store.distance || '1.5 miles';
+                
+                storeCard.innerHTML = `
+                    <div class="store-header">
+                        <h4>${store.name}</h4>
+                        <i class="fas fa-clinic-medical"></i>
+                    </div>
+                    <div class="store-info">
+                        <p><i class="fas fa-map-marker-alt"></i> ${store.address || 'Address not available'}</p>
+                        <p><i class="fas fa-phone"></i> ${store.contact || 'Contact not available'}</p>
+                        <div class="distance">
+                            <i class="fas fa-walking"></i> ${distance}
+                        </div>
+                    </div>
+                `;
+                
+                storeCard.addEventListener('click', () => {
+                    showMap(store);
+                });
+                
+                storesGrid.appendChild(storeCard);
+            });
+        }
+
+        // Show map for the selected store
+        function showMap(store) {
+            mapContainer.classList.add('active');
+            
+            // Scroll to map
+            mapContainer.scrollIntoView({ behavior: 'smooth' });
+            
+            // In a real application, this would initialize a map with the store location
+            // For this example, we're just showing a placeholder
+        }
+
+        // Print prescription
+        function printPrescription() {
+            window.print();
+        }
+
+        // Initialize the page when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>
