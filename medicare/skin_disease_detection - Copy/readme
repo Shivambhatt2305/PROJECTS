@@ -1,1 +1,18 @@
+# Skin Disease Detection Web Application
+
+This application combines a TensorFlow-based skin disease detection model with a web interface for easy diagnosis.
+
+## Features
+
+- Real-time skin disease detection using a pre-trained model
+- Camera capture functionality for immediate analysis
+- Image upload capability for offline diagnosis
+- Detailed disease information and treatment recommendations
+- User-friendly interface with confidence scoring
+
+## Setup Instructions
+
+1. Clone this repository to your local machine.
+
+2. Install the required dependencies:
 
