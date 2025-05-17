@@ -8,6 +8,7 @@
     <link rel='stylesheet' type='text/css' href='https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.23.0/maps/maps.css'>
     <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.23.0/maps/maps-web.min.js"></script>
     <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.23.0/services/services-web.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -16,6 +17,7 @@
         :root {
             --primary-color: #4a90e2;
             --secondary-color: #50c878;
+            --accent-color: #e74c3c;
             --background-color: #f8f9fa;
             --text-color: #333;
             --white: #fff;
@@ -66,6 +68,34 @@
             text-align: center;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #777;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .ambulance-card {
@@ -246,6 +276,11 @@
             color: var(--white);
         }
 
+        .map-button.active {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
         .notification {
             position: fixed;
             top: 1rem;
@@ -338,6 +373,259 @@
             background-color: #3a7bc8;
         }
 
+        /* Emergency Medicine Styles */
+        .emergency-medicine-container {
+            margin-bottom: 1rem;
+        }
+
+        .emergency-condition {
+            background-color: var(--white);
+            border-radius: 15px;
+            box-shadow: var(--card-shadow);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        .emergency-condition:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .emergency-condition h3 {
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .emergency-condition h3 i {
+            font-size: 1.4rem;
+        }
+
+        .emergency-condition p {
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: #555;
+        }
+
+        .medicine-list {
+            margin-top: 0.75rem;
+        }
+
+        .medicine-item {
+            background-color: #f0f4f8;
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .medicine-item i {
+            color: var(--accent-color);
+            margin-right: 0.5rem;
+            margin-top: 0.2rem;
+        }
+
+        .medicine-info {
+            flex: 1;
+        }
+
+        .medicine-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-color);
+        }
+
+        .medicine-info p {
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+            color: #666;
+        }
+
+        .medicine-info .dosage {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .first-aid-steps {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px dashed #ddd;
+        }
+
+        .first-aid-steps h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .first-aid-steps h4 i {
+            margin-right: 0.5rem;
+        }
+
+        .first-aid-steps ol {
+            padding-left: 1.5rem;
+        }
+
+        .first-aid-steps ol li {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .emergency-condition-toggle {
+            cursor: pointer;
+        }
+
+        .emergency-condition-content {
+            display: none;
+        }
+
+        .emergency-condition.expanded .emergency-condition-content {
+            display: block;
+        }
+
+        .search-box {
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            padding-left: 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+
+        .route-info {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 0.75rem;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            max-width: 250px;
+            display: none;
+        }
+
+        .route-info h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .route-info p {
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+        }
+
+        .route-info .traffic-status {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        .route-info .traffic-status.low {
+            background-color: #e6f7ed;
+            color: #2ecc71;
+        }
+
+        .route-info .traffic-status.moderate {
+            background-color: #fef5e7;
+            color: #f39c12;
+        }
+
+        .route-info .traffic-status.high {
+            background-color: #fdeae8;
+            color: #e74c3c;
+        }
+
+        /* Home Remedies Section */
+        .home-remedies {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px dashed #ddd;
+            margin-bottom: 0.75rem;
+        }
+
+        .home-remedies h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .home-remedies h4 i {
+            margin-right: 0.5rem;
+        }
+
+        .remedy-item {
+            background-color: #f0f8f1;
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .remedy-item i {
+            color: var(--secondary-color);
+            margin-right: 0.5rem;
+            margin-top: 0.2rem;
+        }
+
+        .remedy-info {
+            flex: 1;
+        }
+
+        .remedy-info h5 {
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-color);
+        }
+
+        .remedy-info p {
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+            color: #666;
+        }
+
+        .remedy-info .method {
+            font-style: italic;
+            color: #555;
+        }
+
         @media (min-width: 768px) {
             .container {
                 flex-direction: row;
@@ -385,11 +673,32 @@
                 padding: 1rem;
                 font-size: 1rem;
             }
+
+            .route-info {
+                max-width: 300px;
+                padding: 1rem;
+            }
         }
 
         @media (max-width: 767px) {
             .button-group {
                 flex-direction: column;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none; /* IE and Edge */
+            }
+
+            .tabs::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Opera */
+            }
+
+            .tab {
+                padding: 0.5rem 0.75rem;
             }
         }
     </style>
@@ -406,69 +715,880 @@
         <div class="ambulance-details">
             <h1>Emergency Services</h1>
             
-            <div class="driver-input-container">
-                <h3>Contact Driver Directly</h3>
-                <div class="input-group">
-                    <input type="text" id="driverNameInput" placeholder="Enter driver name">
-                    <button id="sendEmergencyBtn">Send Alert</button>
-                </div>
-                <p style="font-size: 0.8rem; color: #666;">This will send an emergency alert with your location</p>
+            <div class="tabs">
+                <div class="tab active" data-tab="ambulances">Ambulances</div>
+                <div class="tab" data-tab="medicines">Emergency Medicines</div>
             </div>
             
-            <div class="ambulance-card" data-id="1" data-lat="22.2500" data-lng="70.7500">
-                <h2>Ambulance #1</h2>
-                <div class="ambulance-info">
-                    <span class="ambulance-status en-route">En Route</span>
-                    <span class="ambulance-eta">ETA: 5 mins</span>
+            <div class="tab-content active" id="ambulancesTab">
+                <div class="driver-input-container">
+                    <h3>Contact Driver Directly</h3>
+                    <div class="input-group">
+                        <input type="text" id="driverNameInput" placeholder="Enter driver name">
+                        <button id="sendEmergencyBtn">Send Alert</button>
+                    </div>
+                    <p style="font-size: 0.8rem; color: #666;">This will send an emergency alert with your location</p>
                 </div>
-                <div class="driver-info">
-                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Driver" class="driver-photo">
-                    <div>
-                        <p><strong>John Doe</strong></p>
-                        <p>License: EMT-123456</p>
+                
+                <div class="ambulance-card" data-id="1" data-lat="22.2500" data-lng="70.7500">
+                    <h2>Ambulance #1</h2>
+                    <div class="ambulance-info">
+                        <span class="ambulance-status en-route">En Route</span>
+                        <span class="ambulance-eta">ETA: 5 mins</span>
+                    </div>
+                    <div class="driver-info">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Driver" class="driver-photo">
+                        <div>
+                            <p><strong>Ansh Raythatha</strong></p>
+                            <p>License: EMT-123456</p>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <a href="tel:+1234567890" class="contact-button">Call</a>
+                        <button class="emergency-button" data-driver="Ansh Raythatha">Send Alert</button>
                     </div>
                 </div>
-                <div class="button-group">
-                    <a href="tel:+1234567890" class="contact-button">Call</a>
-                    <button class="emergency-button" data-driver="John Doe">Send Alert</button>
+                
+                <div class="ambulance-card" data-id="2" data-lat="22.3500" data-lng="70.8500">
+                    <h2>Ambulance #2</h2>
+                    <div class="ambulance-info">
+                        <span class="ambulance-status">Available</span>
+                        <span class="ambulance-eta">ETA: 8 mins</span>
+                    </div>
+                    <div class="driver-info">
+                        <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Driver" class="driver-photo">
+                        <div>
+                            <p><strong>Jane Smith</strong></p>
+                            <p>License: EMT-789012</p>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <a href="tel:+1987654321" class="contact-button">Call</a>
+                        <button class="emergency-button" data-driver="Jane Smith">Send Alert</button>
+                    </div>
+                </div>
+                
+                <div class="ambulance-card" data-id="3" data-lat="22.4000" data-lng="70.9000">
+                    <h2>Ambulance #3</h2>
+                    <div class="ambulance-info">
+                        <span class="ambulance-status">Available</span>
+                        <span class="ambulance-eta">ETA: 12 mins</span>
+                    </div>
+                    <div class="driver-info">
+                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Driver" class="driver-photo">
+                        <div>
+                            <p><strong>Robert Johnson</strong></p>
+                            <p>License: EMT-456789</p>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <a href="tel:+1567891234" class="contact-button">Call</a>
+                        <button class="emergency-button" data-driver="Robert Johnson">Send Alert</button>
+                    </div>
                 </div>
             </div>
             
-            <div class="ambulance-card" data-id="2" data-lat="22.3500" data-lng="70.8500">
-                <h2>Ambulance #2</h2>
-                <div class="ambulance-info">
-                    <span class="ambulance-status">Available</span>
-                    <span class="ambulance-eta">ETA: 8 mins</span>
+            <div class="tab-content" id="medicinesTab">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="emergencySearch" placeholder="Search emergency conditions...">
                 </div>
-                <div class="driver-info">
-                    <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Driver" class="driver-photo">
-                    <div>
-                        <p><strong>Jane Smith</strong></p>
-                        <p>License: EMT-789012</p>
+                
+                <div class="emergency-medicine-container" id="emergencyMedicineContainer">
+                    <!-- 1. Heart Attack -->
+                    <div class="emergency-condition" data-condition="heart attack cardiac arrest">
+                        <h3 class="emergency-condition-toggle">
+                            <span><i class="fas fa-heartbeat"></i> Heart Attack</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <div class="emergency-condition-content">
+                            <p>A heart attack occurs when blood flow to part of the heart is blocked, causing damage to heart muscle.</p>
+                            
+                            <div class="home-remedies">
+                                <h4><i class="fas fa-home"></i> Home Solutions</h4>
+                                <div class="remedy-item">
+                                    <i class="fas fa-mortar-pestle"></i>
+                                    <div class="remedy-info">
+                                        <h5>Aspirin</h5>
+                                        <p>If not allergic, chew a regular adult aspirin (325 mg) or 4 low-dose aspirin (81 mg)</p>
+                                        <p class="method">Helps prevent blood clotting and may reduce heart damage</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-couch"></i>
+                                    <div class="remedy-info">
+                                        <h5>Rest in Comfortable Position</h5>
+                                        <p>Sit or lie down in a semi-upright position with knees bent</p>
+                                        <p class="method">Reduces strain on the heart</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-tshirt"></i>
+                                    <div class="remedy-info">
+                                        <h5>Loosen Tight Clothing</h5>
+                                        <p>Loosen collar, belt, or any restrictive clothing</p>
+                                        <p class="method">Helps ease breathing and circulation</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="medicine-list">
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Aspirin</h4>
+                                        <p>Helps prevent blood clotting</p>
+                                        <p class="dosage">Dosage: 325mg chewed immediately</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Nitroglycerin</h4>
+                                        <p>Relaxes blood vessels to improve blood flow</p>
+                                        <p class="dosage">Dosage: 0.4mg tablet under tongue</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Oxygen</h4>
+                                        <p>Increases oxygen to the heart</p>
+                                        <p class="dosage">Administered by medical professionals</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="first-aid-steps">
+                                <h4><i class="fas fa-first-aid"></i> First Aid Steps</h4>
+                                <ol>
+                                    <li>Call emergency services immediately (911)</li>
+                                    <li>Have the person sit or lie down in a comfortable position</li>
+                                    <li>Give aspirin if available and not allergic</li>
+                                    <li>Monitor breathing and pulse</li>
+                                    <li>Begin CPR if the person becomes unresponsive and is not breathing normally</li>
+                                </ol>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="button-group">
-                    <a href="tel:+1987654321" class="contact-button">Call</a>
-                    <button class="emergency-button" data-driver="Jane Smith">Send Alert</button>
-                </div>
-            </div>
-            
-            <div class="ambulance-card" data-id="3" data-lat="22.4000" data-lng="70.9000">
-                <h2>Ambulance #3</h2>
-                <div class="ambulance-info">
-                    <span class="ambulance-status">Available</span>
-                    <span class="ambulance-eta">ETA: 12 mins</span>
-                </div>
-                <div class="driver-info">
-                    <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Driver" class="driver-photo">
-                    <div>
-                        <p><strong>Robert Johnson</strong></p>
-                        <p>License: EMT-456789</p>
+                    
+                    <!-- 2. Stroke -->
+                    <div class="emergency-condition" data-condition="stroke brain attack cerebral">
+                        <h3 class="emergency-condition-toggle">
+                            <span><i class="fas fa-brain"></i> Stroke</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <div class="emergency-condition-content">
+                            <p>A stroke occurs when blood flow to part of the brain is blocked or when a blood vessel in the brain bursts.</p>
+                            
+                            <div class="home-remedies">
+                                <h4><i class="fas fa-home"></i> Home Solutions</h4>
+                                <div class="remedy-item">
+                                    <i class="fas fa-clock"></i>
+                                    <div class="remedy-info">
+                                        <h5>Note the Time</h5>
+                                        <p>Record when symptoms first appeared</p>
+                                        <p class="method">Critical for treatment decisions at the hospital</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-bed"></i>
+                                    <div class="remedy-info">
+                                        <h5>Position Properly</h5>
+                                        <p>Help the person lie down with head slightly elevated</p>
+                                        <p class="method">Improves blood flow to the brain</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-ban"></i>
+                                    <div class="remedy-info">
+                                        <h5>Avoid Food and Drink</h5>
+                                        <p>Do not give anything by mouth</p>
+                                        <p class="method">Prevents choking as swallowing may be impaired</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="medicine-list">
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Tissue Plasminogen Activator (tPA)</h4>
+                                        <p>Dissolves blood clots and restores blood flow</p>
+                                        <p class="dosage">Must be administered by medical professionals within 3-4.5 hours of symptom onset</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Antiplatelet/Anticoagulant Medication</h4>
+                                        <p>Prevents blood clots from forming</p>
+                                        <p class="dosage">Administered by medical professionals</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="first-aid-steps">
+                                <h4><i class="fas fa-first-aid"></i> First Aid Steps (FAST)</h4>
+                                <ol>
+                                    <li><strong>F</strong>ace: Ask the person to smile. Does one side of the face droop?</li>
+                                    <li><strong>A</strong>rms: Ask the person to raise both arms. Does one arm drift downward?</li>
+                                    <li><strong>S</strong>peech: Ask the person to repeat a simple phrase. Is their speech slurred or strange?</li>
+                                    <li><strong>T</strong>ime: If you observe any of these signs, call emergency services immediately</li>
+                                    <li>Note the time when symptoms first appeared</li>
+                                </ol>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="button-group">
-                    <a href="tel:+1567891234" class="contact-button">Call</a>
-                    <button class="emergency-button" data-driver="Robert Johnson">Send Alert</button>
+                    
+                    <!-- 3. Severe Allergic Reaction -->
+                    <div class="emergency-condition" data-condition="allergic reaction anaphylaxis anaphylactic shock">
+                        <h3 class="emergency-condition-toggle">
+                            <span><i class="fas fa-allergies"></i> Severe Allergic Reaction</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <div class="emergency-condition-content">
+                            <p>Anaphylaxis is a severe, potentially life-threatening allergic reaction that can occur within seconds or minutes of exposure to an allergen.</p>
+                            
+                            <div class="home-remedies">
+                                <h4><i class="fas fa-home"></i> Home Solutions</h4>
+                                <div class="remedy-item">
+                                    <i class="fas fa-syringe"></i>
+                                    <div class="remedy-info">
+                                        <h5>Epinephrine Auto-Injector</h5>
+                                        <p>Use prescribed EpiPen if available</p>
+                                        <p class="method">Inject into outer thigh through clothing if necessary</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-capsules"></i>
+                                    <div class="remedy-info">
+                                        <h5>Antihistamine</h5>
+                                        <p>Give diphenhydramine (Benadryl) if the person is conscious and able to swallow</p>
+                                        <p class="method">Helps reduce allergic symptoms</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-wind"></i>
+                                    <div class="remedy-info">
+                                        <h5>Remove Allergen</h5>
+                                        <p>Move away from the trigger if known</p>
+                                        <p class="method">Prevents further exposure</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="medicine-list">
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Epinephrine (EpiPen)</h4>
+                                        <p>Reduces allergic reaction by constricting blood vessels</p>
+                                        <p class="dosage">0.3mg for adults, 0.15mg for children via auto-injector into outer thigh</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Antihistamines</h4>
+                                        <p>Reduces symptoms of allergic reaction</p>
+                                        <p class="dosage">Diphenhydramine (Benadryl): 25-50mg orally</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="first-aid-steps">
+                                <h4><i class="fas fa-first-aid"></i> First Aid Steps</h4>
+                                <ol>
+                                    <li>Use epinephrine auto-injector if available</li>
+                                    <li>Call emergency services immediately</li>
+                                    <li>Help the person stay calm and lie quietly on their back</li>
+                                    <li>Loosen tight clothing and cover them with a blanket</li>
+                                    <li>If there's vomiting or bleeding from the mouth, turn them on their side</li>
+                                    <li>If there are no signs of breathing, coughing, or movement, begin CPR</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 4. Diabetic Emergency -->
+                    <div class="emergency-condition" data-condition="diabetes diabetic hypoglycemia hyperglycemia insulin">
+                        <h3 class="emergency-condition-toggle">
+                            <span><i class="fas fa-syringe"></i> Diabetic Emergency</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <div class="emergency-condition-content">
+                            <p>Diabetic emergencies can include hypoglycemia (low blood sugar) or hyperglycemia (high blood sugar), both of which can be life-threatening.</p>
+                            
+                            <div class="home-remedies">
+                                <h4><i class="fas fa-home"></i> Home Solutions</h4>
+                                <div class="remedy-item">
+                                    <i class="fas fa-candy-cane"></i>
+                                    <div class="remedy-info">
+                                        <h5>Fast-Acting Sugar (for Hypoglycemia)</h5>
+                                        <p>Give fruit juice, regular soda, honey, or sugar dissolved in water</p>
+                                        <p class="method">Raises blood sugar quickly</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-cookie"></i>
+                                    <div class="remedy-info">
+                                        <h5>Follow with Complex Carbs</h5>
+                                        <p>After fast sugar, give crackers with cheese or peanut butter</p>
+                                        <p class="method">Provides sustained blood sugar increase</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-tint"></i>
+                                    <div class="remedy-info">
+                                        <h5>Water (for Hyperglycemia)</h5>
+                                        <p>Give plenty of sugar-free fluids if conscious</p>
+                                        <p class="method">Helps flush excess sugar and prevent dehydration</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="medicine-list">
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Glucose Tablets/Gel (for Hypoglycemia)</h4>
+                                        <p>Raises blood sugar quickly</p>
+                                        <p class="dosage">15-20g of glucose</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Glucagon (for Severe Hypoglycemia)</h4>
+                                        <p>Raises blood sugar when person is unconscious</p>
+                                        <p class="dosage">1mg injection for adults</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Insulin (for Hyperglycemia)</h4>
+                                        <p>Lowers blood sugar</p>
+                                        <p class="dosage">Administered by medical professionals</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="first-aid-steps">
+                                <h4><i class="fas fa-first-aid"></i> First Aid Steps for Hypoglycemia</h4>
+                                <ol>
+                                    <li>If the person is conscious, give them sugar in the form of juice, honey, or glucose tablets</li>
+                                    <li>Wait 15 minutes and check for improvement</li>
+                                    <li>If no improvement, give more sugar and call emergency services</li>
+                                    <li>If unconscious, do not give anything by mouth</li>
+                                    <li>Administer glucagon if available and you know how</li>
+                                    <li>Call emergency services</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 5. Seizure -->
+                    <div class="emergency-condition" data-condition="seizure epilepsy convulsion fit">
+                        <h3 class="emergency-condition-toggle">
+                            <span><i class="fas fa-bolt"></i> Seizure</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <div class="emergency-condition-content">
+                            <p>A seizure is a sudden, uncontrolled electrical disturbance in the brain that can cause changes in behavior, movements, feelings, and levels of consciousness.</p>
+                            
+                            <div class="home-remedies">
+                                <h4><i class="fas fa-home"></i> Home Solutions</h4>
+                                <div class="remedy-item">
+                                    <i class="fas fa-couch"></i>
+                                    <div class="remedy-info">
+                                        <h5>Create Safe Space</h5>
+                                        <p>Clear area of furniture or objects that could cause injury</p>
+                                        <p class="method">Prevents injuries during convulsions</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-pillow"></i>
+                                    <div class="remedy-info">
+                                        <h5>Cushion the Head</h5>
+                                        <p>Place something soft under the head</p>
+                                        <p class="method">Prevents head injury</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-stopwatch"></i>
+                                    <div class="remedy-info">
+                                        <h5>Time the Seizure</h5>
+                                        <p>Note when the seizure starts and ends</p>
+                                        <p class="method">Important information for medical professionals</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="medicine-list">
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Benzodiazepines</h4>
+                                        <p>Stops seizure activity</p>
+                                        <p class="dosage">Diazepam (Valium): 5-10mg IV/IM or rectal gel</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Midazolam</h4>
+                                        <p>Nasal spray for seizure emergencies</p>
+                                        <p class="dosage">5mg nasal spray for adults</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="first-aid-steps">
+                                <h4><i class="fas fa-first-aid"></i> First Aid Steps</h4>
+                                <ol>
+                                    <li>Ease the person to the floor and clear the area of anything hazardous</li>
+                                    <li>Put something soft and flat under their head</li>
+                                    <li>Remove eyeglasses and loosen tight clothing</li>
+                                    <li>Time the seizure</li>
+                                    <li>Do not restrain the person or put anything in their mouth</li>
+                                    <li>Roll them onto their side after the seizure stops</li>
+                                    <li>Call emergency services if the seizure lasts more than 5 minutes, if the person has trouble breathing, if they do not wake up, or if they have another seizure</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6. Trauma/Severe Bleeding -->
+                    <div class="emergency-condition" data-condition="trauma bleeding hemorrhage wound injury">
+                        <h3 class="emergency-condition-toggle">
+                            <span><i class="fas fa-tint"></i> Trauma/Severe Bleeding</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <div class="emergency-condition-content">
+                            <p>Severe bleeding can be life-threatening and requires immediate medical attention to prevent shock and death.</p>
+                            
+                            <div class="home-remedies">
+                                <h4><i class="fas fa-home"></i> Home Solutions</h4>
+                                <div class="remedy-item">
+                                    <i class="fas fa-compress"></i>
+                                    <div class="remedy-info">
+                                        <h5>Direct Pressure</h5>
+                                        <p>Use clean cloth, towel, or t-shirt to apply firm pressure</p>
+                                        <p class="method">Most effective way to stop bleeding</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <div class="remedy-info">
+                                        <h5>Elevation</h5>
+                                        <p>Raise injured limb above heart level if possible</p>
+                                        <p class="method">Reduces blood flow to the area</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-snowflake"></i>
+                                    <div class="remedy-info">
+                                        <h5>Cold Compress</h5>
+                                        <p>Apply ice wrapped in cloth to injury site</p>
+                                        <p class="method">Constricts blood vessels and reduces bleeding</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="medicine-list">
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Hemostatic Agents</h4>
+                                        <p>Promotes blood clotting when applied to wounds</p>
+                                        <p class="dosage">Apply directly to wound with pressure</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Tranexamic Acid (TXA)</h4>
+                                        <p>Prevents breakdown of blood clots</p>
+                                        <p class="dosage">1g IV within 3 hours of injury (administered by professionals)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="first-aid-steps">
+                                <h4><i class="fas fa-first-aid"></i> First Aid Steps</h4>
+                                <ol>
+                                    <li>Apply direct pressure to the wound with a clean cloth or bandage</li>
+                                    <li>If possible, elevate the injured area above the level of the heart</li>
+                                    <li>Apply a tourniquet only as a last resort for life-threatening limb bleeding</li>
+                                    <li>Keep the person warm and calm to prevent shock</li>
+                                    <li>Call emergency services immediately</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7. Respiratory Distress -->
+                    <div class="emergency-condition" data-condition="respiratory distress asthma copd breathing difficulty">
+                        <h3 class="emergency-condition-toggle">
+                            <span><i class="fas fa-lungs"></i> Respiratory Distress</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <div class="emergency-condition-content">
+                            <p>Respiratory distress is a condition where a person has difficulty breathing or cannot breathe effectively enough to maintain normal oxygen levels.</p>
+                            
+                            <div class="home-remedies">
+                                <h4><i class="fas fa-home"></i> Home Solutions</h4>
+                                <div class="remedy-item">
+                                    <i class="fas fa-chair"></i>
+                                    <div class="remedy-info">
+                                        <h5>Upright Position</h5>
+                                        <p>Help person sit upright, leaning slightly forward</p>
+                                        <p class="method">Opens airways and makes breathing easier</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-fan"></i>
+                                    <div class="remedy-info">
+                                        <h5>Fresh Air</h5>
+                                        <p>Open windows or use a fan to circulate air</p>
+                                        <p class="method">Creates sensation of easier breathing</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-mug-hot"></i>
+                                    <div class="remedy-info">
+                                        <h5>Steam Inhalation</h5>
+                                        <p>Breathe in steam from hot shower or bowl of hot water</p>
+                                        <p class="method">Helps loosen mucus and open airways</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="medicine-list">
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Albuterol (Salbutamol)</h4>
+                                        <p>Bronchodilator that relaxes muscles in the airways</p>
+                                        <p class="dosage">2-4 puffs via inhaler every 4-6 hours</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Epinephrine</h4>
+                                        <p>For severe asthma or anaphylaxis</p>
+                                        <p class="dosage">0.3-0.5mg IM for adults</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Oxygen</h4>
+                                        <p>Supplemental oxygen to increase blood oxygen levels</p>
+                                        <p class="dosage">Administered by medical professionals</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="first-aid-steps">
+                                <h4><i class="fas fa-first-aid"></i> First Aid Steps</h4>
+                                <ol>
+                                    <li>Help the person into a comfortable position (usually sitting upright)</li>
+                                    <li>Loosen any tight clothing around the neck or chest</li>
+                                    <li>Assist with prescribed medications like inhalers if available</li>
+                                    <li>Encourage slow, deep breathing</li>
+                                    <li>Call emergency services if symptoms are severe or not improving</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 8. Poisoning -->
+                    <div class="emergency-condition" data-condition="poisoning toxin overdose ingestion">
+                        <h3 class="emergency-condition-toggle">
+                            <span><i class="fas fa-skull-crossbones"></i> Poisoning</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <div class="emergency-condition-content">
+                            <p>Poisoning occurs when a person is exposed to a substance that can cause illness, injury, or death when it enters the body.</p>
+                            
+                            <div class="home-remedies">
+                                <h4><i class="fas fa-home"></i> Home Solutions</h4>
+                                <div class="remedy-item">
+                                    <i class="fas fa-phone"></i>
+                                    <div class="remedy-info">
+                                        <h5>Poison Control</h5>
+                                        <p>Call poison control center (1-800-222-1222 in the US)</p>
+                                        <p class="method">Get expert advice specific to the poison</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-shower"></i>
+                                    <div class="remedy-info">
+                                        <h5>Skin Decontamination</h5>
+                                        <p>Remove contaminated clothing and rinse skin with water for 15-20 minutes</p>
+                                        <p class="method">Removes poison from skin surface</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-eye"></i>
+                                    <div class="remedy-info">
+                                        <h5>Eye Irrigation</h5>
+                                        <p>For eye exposure, flush with lukewarm water for 15-20 minutes</p>
+                                        <p class="method">Removes poison from eye surface</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="medicine-list">
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Activated Charcoal</h4>
+                                        <p>Absorbs many poisons in the digestive tract</p>
+                                        <p class="dosage">50-100g orally (only if advised by poison control)</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Naloxone (Narcan)</h4>
+                                        <p>Reverses opioid overdose</p>
+                                        <p class="dosage">2-4mg intranasal or IM</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Specific Antidotes</h4>
+                                        <p>Various antidotes for specific poisons</p>
+                                        <p class="dosage">Varies by poison type (administered by professionals)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="first-aid-steps">
+                                <h4><i class="fas fa-first-aid"></i> First Aid Steps</h4>
+                                <ol>
+                                    <li>Call poison control center (1-800-222-1222 in the US) or emergency services</li>
+                                    <li>Do not induce vomiting unless specifically instructed by medical professionals</li>
+                                    <li>If the poison is on the skin, remove contaminated clothing and rinse skin with water for 15-20 minutes</li>
+                                    <li>If the poison is inhaled, get the person to fresh air immediately</li>
+                                    <li>Bring the poison container or substance to the hospital if possible</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 9. Burns -->
+                    <div class="emergency-condition" data-condition="burns thermal chemical electrical radiation">
+                        <h3 class="emergency-condition-toggle">
+                            <span><i class="fas fa-fire"></i> Burns</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <div class="emergency-condition-content">
+                            <p>Burns are tissue damage caused by heat, chemicals, electricity, radiation, or friction. They range from minor to life-threatening.</p>
+                            
+                            <div class="home-remedies">
+                                <h4><i class="fas fa-home"></i> Home Solutions</h4>
+                                <div class="remedy-item">
+                                    <i class="fas fa-water"></i>
+                                    <div class="remedy-info">
+                                        <h5>Cool Water</h5>
+                                        <p>Run cool (not cold) water over burn for 10-15 minutes</p>
+                                        <p class="method">Stops the burning process and reduces pain</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-ring"></i>
+                                    <div class="remedy-info">
+                                        <h5>Remove Constricting Items</h5>
+                                        <p>Take off rings, watches, belts, or tight clothing</p>
+                                        <p class="method">Prevents complications as swelling occurs</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-leaf"></i>
+                                    <div class="remedy-info">
+                                        <h5>Aloe Vera</h5>
+                                        <p>Apply pure aloe vera gel to minor burns</p>
+                                        <p class="method">Soothes and promotes healing</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="medicine-list">
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Silver Sulfadiazine Cream</h4>
+                                        <p>Prevents and treats infections in second and third-degree burns</p>
+                                        <p class="dosage">Apply 1/16 inch layer to affected area 1-2 times daily</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Pain Relievers</h4>
+                                        <p>Reduces pain from burns</p>
+                                        <p class="dosage">Acetaminophen or ibuprofen as directed</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="first-aid-steps">
+                                <h4><i class="fas fa-first-aid"></i> First Aid Steps</h4>
+                                <ol>
+                                    <li>Remove the person from the source of the burn</li>
+                                    <li>Cool the burn with cool (not cold) running water for 10-15 minutes</li>
+                                    <li>Remove jewelry or tight items from the burned area before swelling occurs</li>
+                                    <li>Cover the burn with a sterile, non-stick bandage</li>
+                                    <li>Do not apply butter, oil, ice, or cotton balls to burns</li>
+                                    <li>Seek medical attention for burns that are large, deep, or on the face, hands, feet, genitals, or major joints</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 10. Hypothermia -->
+                    <div class="emergency-condition" data-condition="hypothermia cold exposure freezing">
+                        <h3 class="emergency-condition-toggle">
+                            <span><i class="fas fa-snowflake"></i> Hypothermia</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <div class="emergency-condition-content">
+                            <p>Hypothermia occurs when the body loses heat faster than it can produce it, causing a dangerously low body temperature (below 95°F or 35°C).</p>
+                            
+                            <div class="home-remedies">
+                                <h4><i class="fas fa-home"></i> Home Solutions</h4>
+                                <div class="remedy-item">
+                                    <i class="fas fa-tshirt"></i>
+                                    <div class="remedy-info">
+                                        <h5>Dry Clothing</h5>
+                                        <p>Remove wet clothing and replace with dry, warm layers</p>
+                                        <p class="method">Prevents further heat loss</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-blanket"></i>
+                                    <div class="remedy-info">
+                                        <h5>Warm Blankets</h5>
+                                        <p>Wrap in warm blankets or sleeping bag</p>
+                                        <p class="method">Insulates and helps retain body heat</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-mug-hot"></i>
+                                    <div class="remedy-info">
+                                        <h5>Warm Beverages</h5>
+                                        <p>Give warm, sweet, non-alcoholic drinks if conscious</p>
+                                        <p class="method">Helps warm from inside</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="medicine-list">
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>Warm IV Fluids</h4>
+                                        <p>Warms the body from inside</p>
+                                        <p class="dosage">Administered by medical professionals</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="first-aid-steps">
+                                <h4><i class="fas fa-first-aid"></i> First Aid Steps</h4>
+                                <ol>
+                                    <li>Move the person to a warm, dry location</li>
+                                    <li>Remove wet clothing and replace with warm, dry clothing or blankets</li>
+                                    <li>If the person is conscious, provide warm beverages (no alcohol)</li>
+                                    <li>Apply warm compresses to the neck, chest, and groin (not extremities)</li>
+                                    <li>Handle the person gently and avoid rubbing or massaging</li>
+                                    <li>Call emergency services for moderate to severe hypothermia</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 11. Heat Stroke -->
+                    <div class="emergency-condition" data-condition="heat stroke hyperthermia heat exhaustion">
+                        <h3 class="emergency-condition-toggle">
+                            <span><i class="fas fa-temperature-high"></i> Heat Stroke</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </h3>
+                        <div class="emergency-condition-content">
+                            <p>Heat stroke is a severe condition caused by the body overheating, usually as a result of prolonged exposure to or physical exertion in high temperatures.</p>
+                            
+                            <div class="home-remedies">
+                                <h4><i class="fas fa-home"></i> Home Solutions</h4>
+                                <div class="remedy-item">
+                                    <i class="fas fa-wind"></i>
+                                    <div class="remedy-info">
+                                        <h5>Cooling Measures</h5>
+                                        <p>Move to shade, apply cool wet cloths, use fans</p>
+                                        <p class="method">Rapidly reduces body temperature</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-tshirt"></i>
+                                    <div class="remedy-info">
+                                        <h5>Remove Excess Clothing</h5>
+                                        <p>Remove or loosen tight or unnecessary clothing</p>
+                                        <p class="method">Allows heat to dissipate from the body</p>
+                                    </div>
+                                </div>
+                                <div class="remedy-item">
+                                    <i class="fas fa-ice-cube"></i>
+                                    <div class="remedy-info">
+                                        <h5>Ice Packs</h5>
+                                        <p>Apply to armpits, groin, neck, and back</p>
+                                        <p class="method">Cools major blood vessels</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="medicine-list">
+                                <div class="medicine-item">
+                                    <i class="fas fa-pills"></i>
+                                    <div class="medicine-info">
+                                        <h4>IV Fluids</h4>
+                                        <p>Rehydrates and helps cool the body</p>
+                                        <p class="dosage">Administered by medical professionals</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="first-aid-steps">
+                                <h4><i class="fas fa-first-aid"></i> First Aid Steps</h4>
+                                <ol>
+                                    <li>Move the person to a cool, shaded area</li>
+                                    <li>Remove excess clothing</li>
+                                    <li>Cool the person rapidly using whatever methods available (cold water, ice packs to groin, neck, and armpits)</li>
+                                    <li>Fan the person to promote sweating and evaporation</li>
+                                    <li>Monitor body temperature and continue cooling efforts until temperature drops to 101-102°F (38.3-38.9°C)</li>
+                                    <li>Call emergency services immediately</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -479,6 +1599,12 @@
                 <h3>Your Location</h3>
                 <p><strong>Address:</strong> <span id="userAddress">Loading...</span></p>
                 <p><strong>Coordinates:</strong> <span id="coordinates">Loading...</span></p>
+            </div>
+            <div class="route-info" id="routeInfo">
+                <h3>Route Information</h3>
+                <p><strong>Distance:</strong> <span id="routeDistance">0 km</span></p>
+                <p><strong>Travel Time:</strong> <span id="routeTime">0 mins</span></p>
+                <p><strong>Traffic Condition:</strong> <span id="trafficCondition" class="traffic-status low">Low</span></p>
             </div>
             <div class="map-controls">
                 <button class="map-button" id="recenterBtn" title="Recenter Map">
@@ -502,7 +1628,7 @@
         let watchId = null;
         const apiKey = 'WPglpwBsq3RAlGQqJ8t4TkpRihGrspCI'; // TomTom API key
         const ambulances = [
-            { id: 1, name: "Ambulance #1", driver: "John Doe", position: [70.7500, 22.2500] },
+            { id: 1, name: "Ambulance #1", driver: "Ansh Raythatha", position: [70.7500, 22.2500] },
             { id: 2, name: "Ambulance #2", driver: "Jane Smith", position: [70.8500, 22.3500] },
             { id: 3, name: "Ambulance #3", driver: "Robert Johnson", position: [70.9000, 22.4000] }
         ];
@@ -515,7 +1641,7 @@
         // Initialize the application
         async function initializeApp() {
             try {
-                // Get user's location
+                // Get user's location with increased timeout
                 await getUserLocation();
                 
                 // Initialize map
@@ -529,7 +1655,7 @@
             } catch (error) {
                 console.error('Error initializing app:', error);
                 document.getElementById('loadingOverlay').style.display = 'none';
-                showNotification('Error getting your location. Using default location.');
+                showNotification('Using default location due to geolocation error.');
                 
                 // Initialize with default location
                 initializeMap();
@@ -537,7 +1663,7 @@
             }
         }
         
-        // Get user's location
+        // Get user's location with improved error handling
         function getUserLocation() {
             return new Promise((resolve, reject) => {
                 if (!navigator.geolocation) {
@@ -559,11 +1685,14 @@
                     },
                     (error) => {
                         console.error('Error getting location:', error);
-                        reject(error);
+                        // Instead of rejecting, we'll use default position
+                        showNotification('Using default location. Please check your location permissions.');
+                        // Use default position and still resolve
+                        resolve(userPosition);
                     },
                     {
                         enableHighAccuracy: true,
-                        timeout: 10000,
+                        timeout: 20000, // Increased timeout to 20 seconds
                         maximumAge: 0
                     }
                 );
@@ -599,10 +1728,11 @@
                     },
                     (error) => {
                         console.error('Error watching position:', error);
+                        // Don't stop watching on error, just log it
                     },
                     {
                         enableHighAccuracy: true,
-                        timeout: 10000,
+                        timeout: 20000, // Increased timeout
                         maximumAge: 0
                     }
                 );
@@ -646,43 +1776,70 @@
         
         // Initialize the map
         function initializeMap() {
-            // Create map instance
-            map = tt.map({
-                key: apiKey,
-                container: 'map',
-                center: userPosition,
-                zoom: 13,
-                style: 'https://api.tomtom.com/style/1/style/22.2.1-9?map=basic_main&key=' + apiKey
-            });
-            
-            // Add user marker when map is loaded
-            map.on('load', function() {
-                // Add user marker
-                userMarker = new tt.Marker({
-                    color: '#4a90e2'
-                })
-                    .setLngLat(userPosition)
-                    .setPopup(new tt.Popup().setHTML('<strong>Your Location</strong>'))
-                    .addTo(map);
-                
-                // Add ambulance markers
-                ambulances.forEach(ambulance => {
-                    const marker = new tt.Marker({
-                        color: '#e74c3c'
-                    })
-                        .setLngLat(ambulance.position)
-                        .setPopup(new tt.Popup().setHTML(`<strong>${ambulance.name}</strong><br>Driver: ${ambulance.driver}`))
-                        .addTo(map);
+            try {
+                // Create map instance with HTTPS URL instead of tomtom:// protocol
+                map = tt.map({
+                    key: apiKey,
+                    container: 'map',
+                    center: userPosition,
+                    zoom: 13,
+                    style: 'https://api.tomtom.com/style/1/style/22.2.1-9?map=basic_main&key=' + apiKey
                 });
                 
-                // Update coordinates display
-                document.getElementById('coordinates').textContent = 
-                    `${userPosition[1].toFixed(4)}° N, ${userPosition[0].toFixed(4)}° E`;
-            });
+                // Add user marker when map is loaded
+                map.on('load', function() {
+                    // Add user marker
+                    userMarker = new tt.Marker({
+                        color: '#4a90e2'
+                    })
+                        .setLngLat(userPosition)
+                        .setPopup(new tt.Popup().setHTML('<strong>Your Location</strong>'))
+                        .addTo(map);
+                    
+                    // Add ambulance markers
+                    ambulances.forEach(ambulance => {
+                        const marker = new tt.Marker({
+                            color: '#e74c3c'
+                        })
+                            .setLngLat(ambulance.position)
+                            .setPopup(new tt.Popup().setHTML(`<strong>${ambulance.name}</strong><br>Driver: ${ambulance.driver}`))
+                            .addTo(map);
+                    });
+                    
+                    // Update coordinates display
+                    document.getElementById('coordinates').textContent = 
+                        `${userPosition[1].toFixed(4)}° N, ${userPosition[0].toFixed(4)}° E`;
+                });
+            } catch (error) {
+                console.error('Error initializing map:', error);
+                showNotification('Error initializing map. Please refresh the page.');
+            }
         }
         
         // Setup event listeners
         function setupEventListeners() {
+            // Tab switching
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.tab').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all tab content
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the corresponding tab content
+                    const tabId = this.dataset.tab + 'Tab';
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
             // Ambulance card click
             document.querySelectorAll('.ambulance-card').forEach(card => {
                 card.addEventListener('click', function() {
@@ -742,9 +1899,47 @@
             document.getElementById('trafficBtn').addEventListener('click', function() {
                 toggleTraffic();
             });
+            
+            // Emergency condition toggle
+            document.querySelectorAll('.emergency-condition-toggle').forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const condition = this.closest('.emergency-condition');
+                    condition.classList.toggle('expanded');
+                    
+                    // Change the chevron icon
+                    const icon = this.querySelector('i.fas.fa-chevron-down');
+                    if (condition.classList.contains('expanded')) {
+                        icon.className = 'fas fa-chevron-up';
+                    } else {
+                        icon.className = 'fas fa-chevron-down';
+                    }
+                });
+            });
+            
+            // Emergency search
+            document.getElementById('emergencySearch').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                filterEmergencyConditions(searchTerm);
+            });
         }
         
-        // Calculate and display route between ambulance and user
+        // Filter emergency conditions based on search term
+        function filterEmergencyConditions(searchTerm) {
+            const conditions = document.querySelectorAll('.emergency-condition');
+            
+            conditions.forEach(condition => {
+                const keywords = condition.dataset.condition.toLowerCase();
+                const title = condition.querySelector('h3 span').textContent.toLowerCase();
+                
+                if (keywords.includes(searchTerm) || title.includes(searchTerm) || searchTerm === '') {
+                    condition.style.display = 'block';
+                } else {
+                    condition.style.display = 'none';
+                }
+            });
+        }
+        
+        // Calculate and display route between ambulance and user with real-time traffic
         function calculateAndDisplayRoute(start, end) {
             // Remove existing route if any
             if (map.getLayer('route')) {
@@ -754,8 +1949,8 @@
                 map.removeSource('route');
             }
             
-            // Create routing service
-            const routingUrl = `https://api.tomtom.com/routing/1/calculateRoute/${start[1]},${start[0]}:${end[1]},${end[0]}/json?key=${apiKey}&traffic=true`;
+            // Create routing service with traffic data
+            const routingUrl = `https://api.tomtom.com/routing/1/calculateRoute/${start[1]},${start[0]}:${end[1]},${end[0]}/json?key=${apiKey}&traffic=true&travelMode=car`;
             
             fetch(routingUrl)
                 .then(response => response.json())
@@ -763,6 +1958,35 @@
                     if (data.routes && data.routes.length > 0) {
                         const route = data.routes[0];
                         const geometry = route.legs[0].points.map(point => [point.longitude, point.latitude]);
+                        
+                        // Extract traffic information
+                        const travelTimeWithTraffic = route.summary.travelTimeInSeconds;
+                        const travelTimeNoTraffic = route.summary.noTrafficTravelTimeInSeconds;
+                        const trafficDelay = travelTimeWithTraffic - travelTimeNoTraffic;
+                        const distance = route.summary.lengthInMeters;
+                        
+                        // Determine traffic level
+                        let trafficLevel = 'low';
+                        let trafficColor = '#4CAF50';
+                        
+                        if (trafficDelay > 300) { // More than 5 minutes delay
+                            trafficLevel = 'high';
+                            trafficColor = '#F44336';
+                        } else if (trafficDelay > 120) { // More than 2 minutes delay
+                            trafficLevel = 'moderate';
+                            trafficColor = '#FF9800';
+                        }
+                        
+                        // Update route info display
+                        document.getElementById('routeDistance').textContent = `${(distance / 1000).toFixed(1)} km`;
+                        document.getElementById('routeTime').textContent = `${Math.ceil(travelTimeWithTraffic / 60)} mins`;
+                        
+                        const trafficCondition = document.getElementById('trafficCondition');
+                        trafficCondition.textContent = trafficLevel.charAt(0).toUpperCase() + trafficLevel.slice(1);
+                        trafficCondition.className = `traffic-status ${trafficLevel}`;
+                        
+                        // Show route info
+                        document.getElementById('routeInfo').style.display = 'block';
                         
                         const geojson = {
                             type: 'Feature',
@@ -773,7 +1997,7 @@
                             }
                         };
                         
-                        // Add route to map
+                        // Add route to map with traffic-based color
                         map.addSource('route', {
                             type: 'geojson',
                             data: {
@@ -791,7 +2015,7 @@
                                 'line-cap': 'round'
                             },
                             paint: {
-                                'line-color': '#4a90e2',
+                                'line-color': trafficColor,
                                 'line-width': 6,
                                 'line-opacity': 0.8
                             }
@@ -808,7 +2032,7 @@
                         });
                         
                         // Update ETA
-                        const travelTimeMinutes = Math.ceil(route.summary.travelTimeInSeconds / 60);
+                        const travelTimeMinutes = Math.ceil(travelTimeWithTraffic / 60);
                         
                         // Find the ambulance card and update ETA
                         const ambulanceCard = document.querySelector(`.ambulance-card[data-id="${selectedAmbulanceId}"]`);
@@ -826,7 +2050,7 @@
                 });
         }
         
-        // Toggle traffic flow layer
+        // Toggle traffic flow layer - FIXED VERSION
         function toggleTraffic() {
             if (isTrafficVisible) {
                 // Remove traffic layer
@@ -837,51 +2061,47 @@
                     map.removeSource('traffic-flow');
                 }
                 isTrafficVisible = false;
-                document.getElementById('trafficBtn').style.backgroundColor = '';
-                document.getElementById('trafficBtn').style.color = '';
+                document.getElementById('trafficBtn').classList.remove('active');
+                showNotification('Traffic flow disabled');
             } else {
-                // Add traffic layer
-                map.addSource('traffic-flow', {
-                    type: 'vector',
-                    url: 'https://api.tomtom.com/traffic/map/4/tile/flow/style.json?key=' + apiKey
-                });
-                
-                map.addLayer({
-                    id: 'traffic-flow',
-                    type: 'line',
-                    source: 'traffic-flow',
-                    'source-layer': 'flow',
-                    layout: {
-                        'line-join': 'round',
-                        'line-cap': 'round'
-                    },
-                    paint: {
-                        'line-width': 6,
-                        'line-color': [
-                            'match',
-                            ['get', 'traffic_level'],
-                            'low', '#4CAF50',
-                            'moderate', '#FFEB3B',
-                            'high', '#FF9800',
-                            'severe', '#F44336',
-                            '#4CAF50'
-                        ]
-                    }
-                });
-                
-                isTrafficVisible = true;
-                document.getElementById('trafficBtn').style.backgroundColor = '#4a90e2';
-                document.getElementById('trafficBtn').style.color = '#fff';
+                try {
+                    // Add traffic layer using HTTPS URL instead of tomtom:// protocol
+                    map.addSource('traffic-flow', {
+                        type: 'vector',
+                        url: 'https://api.tomtom.com/traffic/map/4/tile/flow/style.json?key=' + apiKey
+                    });
+                    
+                    map.addLayer({
+                        'id': 'traffic-flow',
+                        'type': 'line',
+                        'source': 'traffic-flow',
+                        'source-layer': 'flow',
+                        'paint': {
+                            'line-width': 6,
+                            'line-color': [
+                                'match',
+                                ['get', 'traffic_level'],
+                                'low', '#4CAF50',
+                                'moderate', '#FFEB3B',
+                                'high', '#FF9800',
+                                'severe', '#F44336',
+                                '#4CAF50'
+                            ]
+                        }
+                    });
+                    
+                    isTrafficVisible = true;
+                    document.getElementById('trafficBtn').classList.add('active');
+                    showNotification('Traffic flow enabled');
+                } catch (error) {
+                    console.error('Error adding traffic layer:', error);
+                    showNotification('Error enabling traffic flow. Please try again.');
+                }
             }
-            
-            showNotification(isTrafficVisible ? 'Traffic flow enabled' : 'Traffic flow disabled');
         }
         
-        // Send emergency alert to driver
-        function sendEmergencyAlert(driverName) {
-            // In a real application, this would send an email or notification to the driver
-            // For this demo, we'll simulate it
-            
+        // Send emergency alert
+        function sendEmergencyAlert(driverName, recipientEmail = "anshraythatha123@gmail.com") {
             // Get user's current position
             const lat = userPosition[1];
             const lng = userPosition[0];
@@ -889,35 +2109,32 @@
             // Create Google Maps link
             const mapsLink = `https://www.google.com/maps?q=${lat},${lng}`;
             
-            // Simulate sending email to driver
-            console.log(`Emergency alert sent to ${driverName} with location: ${mapsLink}`);
+            // Prepare email content
+            const subject = `EMERGENCY: Patient Needs Assistance (${driverName})`;
+            const body = `Emergency Alert!
+
+A patient requires immediate assistance at:
+Coordinates: ${lat}, ${lng}
+Map Link: ${mapsLink}
+
+Driver Notified: ${driverName}
+
+Please respond immediately.
+
+- MediCare Emergency System
+Time: ${new Date().toLocaleString()}`;
+
+            // Create mailto link
+            const mailtoLink = `mailto:${recipientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            
+            // Open user's email client
+            window.location.href = mailtoLink;
             
             // Show notification
-            showNotification(`Emergency alert sent to ${driverName}`);
+            showNotification(`Emergency email prepared for ${recipientEmail}`);
             
-            // In a real application, you would use a service like EmailJS or a backend API
-            // to send an actual email with the user's location
-            
-            // Example of what the email might contain:
-            const emailContent = {
-                to: `${driverName.replace(' ', '.')}@medicare.com`,
-                
-                subject: 'EMERGENCY: Patient Needs Assistance',
-                body: `
-                    Emergency Alert!
-                    
-                    A patient requires immediate assistance at:
-                    Coordinates: ${lat}, ${lng}
-                    Map Link: ${mapsLink}
-                    
-                    Please respond immediately.
-                    
-                    - MediCare Emergency System
-                `
-            };
-            
-            // Log the email content for demonstration
-            console.log('Email content:', emailContent);
+            // Log the details
+            console.log(`Emergency alert for ${driverName} with location: ${mapsLink}`);
         }
         
         // Show notification
