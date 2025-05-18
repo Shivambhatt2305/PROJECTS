@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Health Assessment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #e63946;
+            --primary-dark: #c1121f;
+            --primary-light: #f48c95;
+            --secondary-color: #f1faee;
+            --accent-color: #457b9d;
+            --accent-dark: #1d3557;
+            --light-bg: #f8f9fa;
+            --dark-bg: #212529;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --hover-shadow: 0 10px 25px rgba(230, 57, 70, 0.2);
+            --border-radius: 12px;
+            --spacing-xs: 5px;
+            --spacing-sm: 10px;
+            --spacing-md: 15px;
+            --spacing-lg: 20px;
+            --spacing-xl: 30px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--accent-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg);
+            flex: 1;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: var(--spacing-md);
+            position: relative;
+            display: inline-block;
+        }
+
+        header h1 i {
+            margin-right: var(--spacing-md);
+            animation: pulse 2s infinite;
+        }
+
+        header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .form-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .form-section {
+            margin-bottom: var(--spacing-xl);
+            border-bottom: 1px solid var(--secondary-color);
+            padding-bottom: var(--spacing-lg);
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .form-section h2 {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-lg);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section h2 i {
+            margin-right: var(--spacing-md);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-sm);
+            font-weight: 600;
+            color: var(--accent-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--secondary-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(69, 123, 157, 0.2);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: var(--spacing-sm);
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .btn-secondary {
+            background-color: var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent-dark);
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        .form-row {
+            display: flex;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .vital-input {
+            position: relative;
+        }
+
+        .vital-input .form-control {
+            padding-right: 50px;
+        }
+
+        .vital-input .unit {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: var(--accent-color);
+        }
+
+        .symptom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .symptom-item {
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .symptom-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .symptom-item.selected {
+            background-color: var(--primary-light);
+            color: white;
+        }
+
+        .symptom-item input[type="checkbox"] {
+            margin-right: var(--spacing-sm);
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+        }
+
+        .result-container {
+            display: none;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .result-header h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .result-header p {
+            font-size: 1.2rem;
+            color: var(--accent-dark);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .diagnosis-card {
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .diagnosis-card h3 {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-md);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .diagnosis-card h3 span {
+            font-size: 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .diagnosis-card p {
+            margin-bottom: var(--spacing-md);
+            line-height: 1.6;
+        }
+
+        .medicines-list {
+            margin-top: var(--spacing-lg);
+        }
+
+        .medicines-list h4 {
+            color: var(--accent-dark);
+            margin-bottom: var(--spacing-md);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .medicines-list h4 i {
+            margin-right: var(--spacing-sm);
+            color: var(--primary-color);
+        }
+
+        .medicine-item {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .medicine-info {
+            flex: 1;
+        }
+
+        .medicine-info h5 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--accent-dark);
+        }
+
+        .medicine-info p {
+            font-size: 0.9rem;
+            color: var(--accent-color);
+        }
+
+        .medicine-dosage {
+            background-color: var(--secondary-color);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent-dark);
+        }
+
+        .recommendations {
+            margin-top: var(--spacing-xl);
+        }
+
+        .recommendations h4 {
+            color: var(--accent-dark);
+            margin-bottom: var(--spacing-md);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .recommendations h4 i {
+            margin-right: var(--spacing-sm);
+            color: var(--primary-color);
+        }
+
+        .recommendation-list {
+            list-style: none;
+        }
+
+        .recommendation-list li {
+            margin-bottom: var(--spacing-md);
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .recommendation-list li::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-xl);
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+        }
+
+        .progress-container {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 3px;
+            background-color: var(--secondary-color);
+            z-index: 1;
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-sm);
+            position: relative;
+            z-index: 2;
+            font-weight: 600;
+            color: var(--accent-dark);
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active .step-circle {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .progress-step.completed .step-circle {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.9rem;
+            color: var(--accent-dark);
+            font-weight: 500;
+        }
+
+        .form-page {
+            display: none;
+        }
+
+        .form-page.active {
+            display: block;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-xl);
+        }
+
+        .error-message {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        footer {
+            background-color: var(--dark-bg);
+            color: white;
+            text-align: center;
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+            border-radius: var(--border-radius);
+        }
+
+        footer p {
+            opacity: 0.8;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-md);
+            }
+            
+            header {
+                padding: var(--spacing-lg);
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .form-container, .result-container {
+                padding: var(--spacing-lg);
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+            
+            .symptom-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .progress-steps {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .form-section h2 {
+                font-size: 1.5rem;
+            }
+            
+            .symptom-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+            
+            .navigation-buttons .btn {
+                width: 100%;
+            }
+        }
+
+        .recommendations h4 i.fa-home {
+            color: var(--accent-color);
+        }
+        
+        .recommendations h4 i.fa-first-aid {
+            color: var(--primary-color);
+        }
+        
+        .home-solution-item, .first-aid-item {
+            background-color: var(--secondary-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .home-solution-item i, .first-aid-item i {
+            margin-right: var(--spacing-sm);
+            color: var(--accent-color);
+            margin-top: 3px;
+        }
+        
+        .first-aid-item i {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-heartbeat"></i> MediCare</h1>
+            <p>Your personal health assessment and disease prediction tool</p>
+        </header>
+
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Personal Info</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Vital Signs</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Symptoms</div>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Results</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-container">
+            <!-- Page 1: Personal Information -->
+            <div class="form-page active" id="page1">
+                <div class="form-section">
+                    <h2><i class="fas fa-user"></i> Personal Information</h2>
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" class="form-control" placeholder="Enter your full name">
+                        <div class="error-message" id="nameError">Please enter your full name</div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" class="form-control" placeholder="Enter your email address">
+                                <div class="error-message" id="emailError">Please enter a valid email address</div>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="phone">Mobile Number</label>
+                                <input type="tel" id="phone" class="form-control" placeholder="Enter your mobile number">
+                                <div class="error-message" id="phoneError">Please enter a valid mobile number</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="number" id="age" class="form-control" placeholder="Enter your age" min="1" max="120">
+                                <div class="error-message" id="ageError">Please enter a valid age</div>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" class="form-control">
+                                    <option value="">Select your gender</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <div class="error-message" id="genderError">Please select your gender</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="saveLoginInfo">
+                        <label for="saveLoginInfo">Use this information for login credentials</label>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <div></div> <!-- Empty div for spacing -->
+                    <button type="button" class="btn" id="nextToVitals">Next: Vital Signs <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Page 2: Vital Signs -->
+            <div class="form-page" id="page2">
+                <div class="form-section">
+                    <h2><i class="fas fa-heartbeat"></i> Vital Signs</h2>
+                    <p>Please enter your current vital signs measurements. If you don't have exact values, provide your best estimate.</p>
+                    
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="temperature">Body Temperature</label>
+                                <div class="vital-input">
+                                    <input type="number" id="temperature" class="form-control" placeholder="Enter your temperature" step="0.1" min="35" max="42">
+                                    <span class="unit">°C</span>
+                                </div>
+                                <div class="range-labels">
+                                    <span>35.0</span>
+                                    <span>Normal: 36.5-37.5</span>
+                                    <span>42.0</span>
+                                </div>
+                                <div class="error-message" id="temperatureError">Please enter a valid temperature</div>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="oxygenLevel">Oxygen Saturation (SpO2)</label>
+                                <div class="vital-input">
+                                    <input type="number" id="oxygenLevel" class="form-control" placeholder="Enter your oxygen level" min="70" max="100">
+                                    <span class="unit">%</span>
+                                </div>
+                                <div class="range-labels">
+                                    <span>70%</span>
+                                    <span>Normal: 95-100%</span>
+                                    <span>100%</span>
+                                </div>
+                                <div class="error-message" id="oxygenError">Please enter a valid oxygen level</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="heartRate">Heart Rate</label>
+                                <div class="vital-input">
+                                    <input type="number" id="heartRate" class="form-control" placeholder="Enter your heart rate" min="40" max="200">
+                                    <span class="unit">BPM</span>
+                                </div>
+                                <div class="range-labels">
+                                    <span>40</span>
+                                    <span>Normal: 60-100</span>
+                                    <span>200</span>
+                                </div>
+                                <div class="error-message" id="heartRateError">Please enter a valid heart rate</div>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="bloodPressure">Blood Pressure (if known)</label>
+                                <div class="vital-input">
+                                    <input type="text" id="bloodPressure" class="form-control" placeholder="e.g., 120/80">
+                                    <span class="unit">mmHg</span>
+                                </div>
+                                <div class="range-labels">
+                                    <span>90/60</span>
+                                    <span>Normal: 120/80</span>
+                                    <span>140/90</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-secondary" id="backToPersonal"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button type="button" class="btn" id="nextToSymptoms">Next: Symptoms <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <!-- Page 3: Symptoms -->
+            <div class="form-page" id="page3">
+                <div class="form-section">
+                    <h2><i class="fas fa-clipboard-list"></i> Symptoms & Health Questions</h2>
+                    <p>Please select all symptoms you are currently experiencing:</p>
+                    
+                    <div class="symptom-grid" id="symptomGrid">
+                        <div class="symptom-item">
+                            <input type="checkbox" id="symptom1" class="symptom-checkbox" value="Fever">
+                            <label for="symptom1">Fever</label>
+                        </div>
+                        <div class="symptom-item">
+                            <input type="checkbox" id="symptom2" class="symptom-checkbox" value="Cough">
+                            <label for="symptom2">Cough</label>
+                        </div>
+                        <div class="symptom-item">
+                            <input type="checkbox" id="symptom3" class="symptom-checkbox" value="Shortness of breath">
+                            <label for="symptom3">Shortness of breath</label>
+                        </div>
+                        <div class="symptom-item">
+                            <input type="checkbox" id="symptom4" class="symptom-checkbox" value="Fatigue">
+                            <label for="symptom4">Fatigue</label>
+                        </div>
+                        <div class="symptom-item">
+                            <input type="checkbox" id="symptom5" class="symptom-checkbox" value="Headache">
+                            <label for="symptom5">Headache</label>
+                        </div>
+                        <div class="symptom-item">
+                            <input type="checkbox" id="symptom6" class="symptom-checkbox" value="Sore throat">
+                            <label for="symptom6">Sore throat</label>
+                        </div>
+                        <div class="symptom-item">
+                            <input type="checkbox" id="symptom7" class="symptom-checkbox" value="Muscle pain">
+                            <label for="symptom7">Muscle pain</label>
+                        </div>
+                        <div class="symptom-item">
+                            <input type="checkbox" id="symptom8" class="symptom-checkbox" value="Nausea">
+                            <label for="symptom8">Nausea</label>
+                        </div>
+                        <div class="symptom-item">
+                            <input type="checkbox" id="symptom9" class="symptom-checkbox" value="Diarrhea">
+                            <label for="symptom9">Diarrhea</label>
+                        </div>
+                        <div class="symptom-item">
+                            <input type="checkbox" id="symptom10" class="symptom-checkbox" value="Loss of taste/smell">
+                            <label for="symptom10">Loss of taste/smell</label>
+                        </div>
+                        <div class="symptom-item">
+                            <input type="checkbox" id="symptom11" class="symptom-checkbox" value="Chest pain">
+                            <label for="symptom11">Chest pain</label>
+                        </div>
+                        <div class="symptom-item">
+                            <input type="checkbox" id="symptom12" class="symptom-checkbox" value="Dizziness">
+                            <label for="symptom12">Dizziness</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="symptomDuration">How long have you been experiencing these symptoms?</label>
+                        <select id="symptomDuration" class="form-control">
+                            <option value="">Select duration</option>
+                            <option value="less than 24 hours">Less than 24 hours</option>
+                            <option value="1-3 days">1-3 days</option>
+                            <option value="4-7 days">4-7 days</option>
+                            <option value="1-2 weeks">1-2 weeks</option>
+                            <option value="more than 2 weeks">More than 2 weeks</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="additionalSymptoms">Any other symptoms or health concerns?</label>
+                        <textarea id="additionalSymptoms" class="form-control" rows="3" placeholder="Please describe any other symptoms or health concerns you may have..."></textarea>
+                    </div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-secondary" id="backToVitals"><i class="fas fa-arrow-left"></i> Back</button>
+                    <button type="button" class="btn" id="submitAssessment">Submit Assessment <i class="fas fa-check-circle"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="result-container" id="resultContainer">
+            <div class="result-header">
+                <h2><i class="fas fa-clipboard-check"></i> Health Assessment Results</h2>
+                <p>Based on the information you provided, we've generated the following health assessment. Please note that this is not a medical diagnosis and you should consult with a healthcare professional.</p>
+            </div>
+            
+            <div id="diagnosisContainer">
+                <!-- Diagnosis cards will be inserted here -->
+            </div>
+            
+            <div class="action-buttons">
+                <button type="button" class="btn btn-secondary" id="startNewAssessment"><i class="fas fa-redo"></i> Start New Assessment</button>
+                <button type="button" class="btn" id="printResults"><i class="fas fa-print"></i> Print Results</button>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 MediCare - Your Health Companion</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM Elements
+        const page1 = document.getElementById('page1');
+        const page2 = document.getElementById('page2');
+        const page3 = document.getElementById('page3');
+        const nextToVitals = document.getElementById('nextToVitals');
+        const backToPersonal = document.getElementById('backToPersonal');
+        const nextToSymptoms = document.getElementById('nextToSymptoms');
+        const backToVitals = document.getElementById('backToVitals');
+        const submitAssessment = document.getElementById('submitAssessment');
+        const resultContainer = document.getElementById('resultContainer');
+        const diagnosisContainer = document.getElementById('diagnosisContainer');
+        const startNewAssessment = document.getElementById('startNewAssessment');
+        const printResults = document.getElementById('printResults');
+        const progressSteps = document.querySelectorAll('.progress-step');
+        const symptomItems = document.querySelectorAll('.symptom-item');
+        const symptomCheckboxes = document.querySelectorAll('.symptom-checkbox');
+
+        // Form fields
+        const fullName = document.getElementById('fullName');
+        const email = document.getElementById('email');
+        const phone = document.getElementById('phone');
+        const age = document.getElementById('age');
+        const gender = document.getElementById('gender');
+        const saveLoginInfo = document.getElementById('saveLoginInfo');
+        const temperature = document.getElementById('temperature');
+        const oxygenLevel = document.getElementById('oxygenLevel');
+        const heartRate = document.getElementById('heartRate');
+        const bloodPressure = document.getElementById('bloodPressure');
+        const symptomDuration = document.getElementById('symptomDuration');
+        const additionalSymptoms = document.getElementById('additionalSymptoms');
+
+        // Error messages
+        const nameError = document.getElementById('nameError');
+        const emailError = document.getElementById('emailError');
+        const phoneError = document.getElementById('phoneError');
+        const ageError = document.getElementById('ageError');
+        const genderError = document.getElementById('genderError');
+        const temperatureError = document.getElementById('temperatureError');
+        const oxygenError = document.getElementById('oxygenError');
+        const heartRateError = document.getElementById('heartRateError');
+
+        // Disease database for prediction
+        const diseaseDatabase = [
+            {
+                name: "Common Cold",
+                probability: 0,
+                description: "A viral infectious disease of the upper respiratory tract that primarily affects the nose and throat.",
+                symptoms: ["Cough", "Sore throat", "Runny nose", "Sneezing", "Headache", "Fatigue"],
+                vitalSigns: {
+                    temperature: { min: 36.5, max: 38.0 },
+                    oxygenLevel: { min: 95, max: 100 },
+                    heartRate: { min: 60, max: 100 }
+                },
+                medicines: [
+                    { name: "Acetaminophen", dosage: "500-1000mg every 4-6 hours", description: "For fever and pain relief" },
+                    { name: "Dextromethorphan", dosage: "10-20mg every 4 hours", description: "For cough suppression" },
+                    { name: "Phenylephrine", dosage: "10mg every 4 hours", description: "For nasal congestion" }
+                ],
+                homeSolutions: [
+                    "Honey and warm water: Mix 1-2 tablespoons of honey in warm water or tea to soothe throat",
+                    "Salt water gargle: Dissolve 1/4 to 1/2 teaspoon of salt in 8 ounces of warm water and gargle",
+                    "Steam inhalation: Breathe in steam from a bowl of hot water to relieve congestion",
+                    "Chicken soup: Studies show it may have anti-inflammatory properties"
+                ],
+                firstAid: [
+                    "Rest and conserve energy",
+                    "Stay hydrated with water, clear broth, or warm lemon water with honey",
+                    "Use a cool-mist humidifier to add moisture to the air",
+                    "Apply a warm, moist washcloth to the face to relieve sinus pressure"
+                ],
+                recommendations: [
+                    "Rest and stay hydrated",
+                    "Use a humidifier to add moisture to the air",
+                    "Gargle with salt water to relieve a sore throat",
+                    "Use saline nasal drops or spray to relieve nasal congestion"
+                ]
+            },
+            {
+                name: "Influenza (Flu)",
+                probability: 0,
+                description: "A contagious respiratory illness caused by influenza viruses that infect the nose, throat, and sometimes the lungs.",
+                symptoms: ["Fever", "Cough", "Sore throat", "Muscle pain", "Headache", "Fatigue"],
+                vitalSigns: {
+                    temperature: { min: 38.0, max: 40.0 },
+                    oxygenLevel: { min: 92, max: 98 },
+                    heartRate: { min: 80, max: 120 }
+                },
+                medicines: [
+                    { name: "Oseltamivir (Tamiflu)", dosage: "75mg twice daily for 5 days", description: "Antiviral medication" },
+                    { name: "Ibuprofen", dosage: "400-600mg every 6-8 hours", description: "For fever and pain relief" },
+                    { name: "Guaifenesin", dosage: "200-400mg every 4 hours", description: "Expectorant for cough" }
+                ],
+                homeSolutions: [
+                    "Ginger tea: Brew fresh ginger in hot water to help with nausea and inflammation",
+                    "Warm salt water gargle: Helps soothe sore throat and reduce inflammation",
+                    "Honey and lemon: Mix in warm water to soothe throat and suppress cough",
+                    "Steam inhalation: Add a few drops of eucalyptus oil to help clear congestion"
+                ],
+                firstAid: [
+                    "Isolate from others to prevent spreading the virus",
+                    "Take temperature regularly and monitor for high fever",
+                    "Apply cool, damp washcloths to forehead if fever is high",
+                    "Stay in bed and rest as much as possible"
+                ],
+                recommendations: [
+                    "Rest and stay hydrated",
+                    "Stay home to prevent spreading the virus",
+                    "Use a humidifier to ease congestion",
+                    "Seek medical attention if symptoms worsen or persist"
+                ]
+            },
+            {
+                name: "COVID-19",
+                probability: 0,
+                description: "A respiratory illness caused by the SARS-CoV-2 virus, which can range from mild to severe symptoms.",
+                symptoms: ["Fever", "Cough", "Shortness of breath", "Fatigue", "Loss of taste/smell", "Headache", "Sore throat"],
+                vitalSigns: {
+                    temperature: { min: 37.8, max: 40.0 },
+                    oxygenLevel: { min: 88, max: 96 },
+                    heartRate: { min: 80, max: 120 }
+                },
+                medicines: [
+                    { name: "Acetaminophen", dosage: "500-1000mg every 6 hours", description: "For fever and pain relief" },
+                    { name: "Dextromethorphan", dosage: "10-20mg every 4 hours", description: "For cough suppression" },
+                    { name: "Zinc supplements", dosage: "25-50mg daily", description: "May help reduce symptom duration" }
+                ],
+                homeSolutions: [
+                    "Prone positioning: Lying on your stomach to improve oxygen flow",
+                    "Warm beverages: Herbal teas and warm water to soothe throat",
+                    "Steam inhalation: To help loosen mucus and ease breathing",
+                    "Vitamin C and D: Consider supplements to support immune function"
+                ],
+                firstAid: [
+                    "Isolate immediately to prevent spread to others",
+                    "Monitor oxygen levels with a pulse oximeter if available",
+                    "Track temperature and symptoms in a journal",
+                    "Seek emergency care if experiencing severe shortness of breath or persistent chest pain"
+                ],
+                recommendations: [
+                    "Isolate from others to prevent spread",
+                    "Monitor oxygen levels with a pulse oximeter if available",
+                    "Stay hydrated and get plenty of rest",
+                    "Seek immediate medical attention if experiencing severe symptoms"
+                ]
+            },
+            {
+                name: "Pneumonia",
+                probability: 0,
+                description: "An infection that inflames the air sacs in one or both lungs, which may fill with fluid.",
+                symptoms: ["Fever", "Cough", "Shortness of breath", "Chest pain", "Fatigue"],
+                vitalSigns: {
+                    temperature: { min: 38.0, max: 40.0 },
+                    oxygenLevel: { min: 85, max: 94 },
+                    heartRate: { min: 90, max: 130 }
+                },
+                medicines: [
+                    { name: "Amoxicillin", dosage: "500mg three times daily", description: "Antibiotic for bacterial pneumonia" },
+                    { name: "Azithromycin", dosage: "500mg on day 1, then 250mg daily", description: "Antibiotic for atypical pneumonia" },
+                    { name: "Acetaminophen", dosage: "500-1000mg every 6 hours", description: "For fever and pain relief" }
+                ],
+                homeSolutions: [
+                    "Steam therapy: Inhale steam from a bowl of hot water to loosen mucus",
+                    "Warm fluids: Drink warm broths and herbal teas to stay hydrated",
+                    "Honey and lemon: Mix in warm water to soothe throat and reduce coughing",
+                    "Elevate head: Sleep with head elevated to ease breathing"
+                ],
+                firstAid: [
+                    "Monitor breathing rate and oxygen levels if possible",
+                    "Position upright or slightly reclined to ease breathing",
+                    "Apply warm compress to chest to help loosen mucus",
+                    "Seek immediate medical attention if breathing becomes difficult"
+                ],
+                recommendations: [
+                    "Seek medical attention for proper diagnosis and treatment",
+                    "Take all prescribed antibiotics as directed",
+                    "Use a humidifier to ease breathing",
+                    "Stay hydrated and get plenty of rest"
+                ]
+            },
+            {
+                name: "Hypertension",
+                probability: 0,
+                description: "A condition in which the force of the blood against the artery walls is consistently too high.",
+                symptoms: ["Headache", "Dizziness", "Chest pain", "Shortness of breath"],
+                vitalSigns: {
+                    temperature: { min: 36.0, max: 37.5 },
+                    oxygenLevel: { min: 95, max: 100 },
+                    heartRate: { min: 60, max: 100 }
+                },
+                medicines: [
+                    { name: "Lisinopril", dosage: "10-40mg once daily", description: "ACE inhibitor" },
+                    { name: "Amlodipine", dosage: "5-10mg once daily", description: "Calcium channel blocker" },
+                    { name: "Hydrochlorothiazide", dosage: "12.5-25mg once daily", description: "Diuretic" }
+                ],
+                homeSolutions: [
+                    "DASH diet: Focus on fruits, vegetables, whole grains, and low-fat dairy",
+                    "Reduce sodium: Limit salt intake to less than 1,500mg per day",
+                    "Hibiscus tea: Studies show it may help lower blood pressure",
+                    "Dark chocolate: Small amounts of dark chocolate (70%+ cocoa) may help reduce blood pressure"
+                ],
+                firstAid: [
+                    "Sit down and rest if experiencing symptoms of high blood pressure",
+                    "Take deep, slow breaths to help reduce stress",
+                    "If blood pressure reading is dangerously high (180/120 or higher), seek emergency care",
+                    "Take prescribed medication as directed"
+                ],
+                recommendations: [
+                    "Monitor blood pressure regularly",
+                    "Reduce sodium intake",
+                    "Engage in regular physical activity",
+                    "Maintain a healthy weight",
+                    "Limit alcohol consumption"
+                ]
+            },
+            {
+                name: "Bronchitis",
+                probability: 0,
+                description: "Inflammation of the lining of the bronchial tubes, which carry air to and from the lungs.",
+                symptoms: ["Cough", "Shortness of breath", "Chest discomfort", "Fatigue", "Fever"],
+                vitalSigns: {
+                    temperature: { min: 37.0, max: 38.5 },
+                    oxygenLevel: { min: 92, max: 98 },
+                    heartRate: { min: 70, max: 110 }
+                },
+                medicines: [
+                    { name: "Guaifenesin", dosage: "200-400mg every 4 hours", description: "Expectorant for cough" },
+                    { name: "Dextromethorphan", dosage: "10-20mg every 4 hours", description: "For cough suppression" },
+                    { name: "Ibuprofen", dosage: "400-600mg every 6-8 hours", description: "For fever and pain relief" }
+                ],
+                homeSolutions: [
+                    "Honey and warm water: Soothes throat and reduces coughing",
+                    "Steam inhalation: Add a few drops of eucalyptus oil to help open airways",
+                    "Ginger tea with honey: Helps reduce inflammation and soothe throat",
+                    "Salt water gargle: Reduces throat inflammation and loosens mucus"
+                ],
+                firstAid: [
+                    "Rest in an upright position to ease breathing",
+                    "Use a humidifier or take a hot shower to loosen mucus",
+                    "Drink plenty of fluids to thin mucus secretions",
+                    "Avoid irritants like smoke, dust, and air pollution"
+                ],
+                recommendations: [
+                    "Rest and stay hydrated",
+                    "Use a humidifier to add moisture to the air",
+                    "Avoid irritants like smoke and air pollution",
+                    "Seek medical attention if symptoms worsen or persist"
+                ]
+            },
+            {
+                name: "Asthma",
+                probability: 0,
+                description: "A condition in which your airways narrow and swell and may produce extra mucus, making breathing difficult.",
+                symptoms: ["Shortness of breath", "Chest tightness", "Cough", "Wheezing"],
+                vitalSigns: {
+                    temperature: { min: 36.0, max: 37.5 },
+                    oxygenLevel: { min: 88, max: 96 },
+                    heartRate: { min: 70, max: 120 }
+                },
+                medicines: [
+                    { name: "Albuterol", dosage: "2 puffs every 4-6 hours as needed", description: "Short-acting bronchodilator" },
+                    { name: "Fluticasone", dosage: "1-2 puffs twice daily", description: "Inhaled corticosteroid" },
+                    { name: "Montelukast", dosage: "10mg once daily", description: "Leukotriene modifier" }
+                ],
+                homeSolutions: [
+                    "Breathing exercises: Practice pursed lip and diaphragmatic breathing",
+                    "Steam inhalation: Helps open airways and loosen mucus",
+                    "Caffeine: Small amounts may help open airways temporarily",
+                    "Honey: May help reduce nighttime coughing"
+                ],
+                firstAid: [
+                    "Use rescue inhaler immediately when symptoms appear",
+                    "Sit upright and slightly forward to ease breathing",
+                    "Practice calm, controlled breathing (in through nose, out through pursed lips)",
+                    "Seek emergency care if symptoms don't improve with inhaler or worsen"
+                ],
+                recommendations: [
+                    "Identify and avoid asthma triggers",
+                    "Use a peak flow meter to monitor lung function",
+                    "Follow your asthma action plan",
+                    "Keep rescue medication readily available"
+                ]
+            }
+        ];
+
+        // Initialize the page
+        function init() {
+            setupEventListeners();
+            setupSymptomItems();
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Navigation buttons
+            nextToVitals.addEventListener('click', () => {
+                if (validatePersonalInfo()) {
+                    showPage(2);
+                }
+            });
+            
+            backToPersonal.addEventListener('click', () => {
+                showPage(1);
+            });
+            
+            nextToSymptoms.addEventListener('click', () => {
+                if (validateVitalSigns()) {
+                    showPage(3);
+                }
+            });
+            
+            backToVitals.addEventListener('click', () => {
+                showPage(2);
+            });
+            
+            submitAssessment.addEventListener('click', () => {
+                processAssessment();
+            });
+            
+            startNewAssessment.addEventListener('click', () => {
+                resetForm();
+                showPage(1);
+                resultContainer.style.display = 'none';
+            });
+            
+            printResults.addEventListener('click', () => {
+                window.print();
+            });
+        }
+
+        // Set up symptom items
+        function setupSymptomItems() {
+            symptomItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    // Prevent clicking the label from triggering this event
+                    if (e.target.tagName !== 'INPUT') {
+                        const checkbox = this.querySelector('input[type="checkbox"]');
+                        checkbox.checked = !checkbox.checked;
+                        
+                        // Toggle selected class
+                        if (checkbox.checked) {
+                            this.classList.add('selected');
+                        } else {
+                            this.classList.remove('selected');
+                        }
+                    }
+                });
+            });
+            
+            symptomCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const item = this.closest('.symptom-item');
+                    
+                    if (this.checked) {
+                        item.classList.add('selected');
+                    } else {
+                        item.classList.remove('selected');
+                    }
+                });
+            });
+        }
+
+        // Show a specific page
+        function showPage(pageNumber) {
+            // Hide all pages
+            page1.classList.remove('active');
+            page2.classList.remove('active');
+            page3.classList.remove('active');
+            
+            // Show the selected page
+            if (pageNumber === 1) {
+                page1.classList.add('active');
+            } else if (pageNumber === 2) {
+                page2.classList.add('active');
+            } else if (pageNumber === 3) {
+                page3.classList.add('active');
+            }
+            
+            // Update progress steps
+            updateProgressSteps(pageNumber);
+        }
+
+        // Update progress steps
+        function updateProgressSteps(currentStep) {
+            progressSteps.forEach(step => {
+                const stepNumber = parseInt(step.dataset.step);
+                
+                // Remove all classes first
+                step.classList.remove('active', 'completed');
+                
+                // Add appropriate class
+                if (stepNumber === currentStep) {
+                    step.classList.add('active');
+                } else if (stepNumber < currentStep) {
+                    step.classList.add('completed');
+                }
+            });
+        }
+
+        // Validate personal information
+        function validatePersonalInfo() {
+            let isValid = true;
+            
+            // Reset error messages
+            nameError.style.display = 'none';
+            emailError.style.display = 'none';
+            phoneError.style.display = 'none';
+            ageError.style.display = 'none';
+            genderError.style.display = 'none';
+            
+            // Validate name
+            if (!fullName.value.trim()) {
+                nameError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value.trim())) {
+                emailError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate phone
+            const phoneRegex = /^\d{10,15}$/;
+            if (!phoneRegex.test(phone.value.replace(/\D/g, ''))) {
+                phoneError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate age
+            if (!age.value || age.value < 1 || age.value > 120) {
+                ageError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate gender
+            if (!gender.value) {
+                genderError.style.display = 'block';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // Validate vital signs
+        function validateVitalSigns() {
+            let isValid = true;
+            
+            // Reset error messages
+            temperatureError.style.display = 'none';
+            oxygenError.style.display = 'none';
+            heartRateError.style.display = 'none';
+            
+            // Validate temperature
+            if (!temperature.value || temperature.value < 35 || temperature.value > 42) {
+                temperatureError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate oxygen level
+            if (!oxygenLevel.value || oxygenLevel.value < 70 || oxygenLevel.value > 100) {
+                oxygenError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate heart rate
+            if (!heartRate.value || heartRate.value < 40 || heartRate.value > 200) {
+                heartRateError.style.display = 'block';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // Process the assessment
+        function processAssessment() {
+            // Get selected symptoms
+            const selectedSymptoms = Array.from(symptomCheckboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.value);
+            
+            // Calculate disease probabilities
+            calculateDiseaseProbabilities(selectedSymptoms);
+            
+            // Display results
+            displayResults();
+            
+            // Show result container
+            resultContainer.style.display = 'block';
+            
+            // Hide form container
+            document.querySelector('.form-container').style.display = 'none';
+            
+            // Update progress steps
+            updateProgressSteps(4);
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Calculate disease probabilities
+        function calculateDiseaseProbabilities(selectedSymptoms) {
+            // Reset all probabilities
+            diseaseDatabase.forEach(disease => {
+                disease.probability = 0;
+            });
+            
+            // Calculate symptom match score
+            diseaseDatabase.forEach(disease => {
+                // Calculate symptom match percentage
+                let matchedSymptoms = 0;
+                selectedSymptoms.forEach(symptom => {
+                    if (disease.symptoms.includes(symptom)) {
+                        matchedSymptoms++;
+                    }
+                });
+                
+                const symptomScore = selectedSymptoms.length > 0 
+                    ? (matchedSymptoms / disease.symptoms.length) * 50 
+                    : 0;
+                
+                // Calculate vital signs match
+                let vitalScore = 0;
+                const tempValue = parseFloat(temperature.value);
+                const o2Value = parseFloat(oxygenLevel.value);
+                const hrValue = parseFloat(heartRate.value);
+                
+                if (tempValue >= disease.vitalSigns.temperature.min && 
+                    tempValue <= disease.vitalSigns.temperature.max) {
+                    vitalScore += 10;
+                }
+                
+                if (o2Value >= disease.vitalSigns.oxygenLevel.min && 
+                    o2Value <= disease.vitalSigns.oxygenLevel.max) {
+                    vitalScore += 10;
+                }
+                
+                if (hrValue >= disease.vitalSigns.heartRate.min && 
+                    hrValue <= disease.vitalSigns.heartRate.max) {
+                    vitalScore += 10;
+                }
+                
+                // Calculate age factor (simplified)
+                const ageValue = parseInt(age.value);
+                let ageFactor = 1;
+                
+                // Adjust for specific diseases based on age
+                if (disease.name === "COVID-19" && ageValue > 60) {
+                    ageFactor = 1.2;
+                } else if (disease.name === "Pneumonia" && (ageValue < 5 || ageValue > 65)) {
+                    ageFactor = 1.3;
+                } else if (disease.name === "Hypertension" && ageValue > 40) {
+                    ageFactor = 1.4;
+                }
+                
+                // Calculate total probability
+                disease.probability = (symptomScore + vitalScore) * ageFactor;
+                
+                // Cap at 100%
+                if (disease.probability > 100) {
+                    disease.probability = 100;
+                }
+            });
+            
+            // Sort diseases by probability (descending)
+            diseaseDatabase.sort((a, b) => b.probability - a.probability);
+        }
+
+        // Display assessment results
+        function displayResults() {
+            // Clear previous results
+            diagnosisContainer.innerHTML = '';
+            
+            // Get top 3 most probable diseases
+            const topDiseases = diseaseDatabase
+                .filter(disease => disease.probability > 10)
+                .slice(0, 3);
+            
+            if (topDiseases.length === 0) {
+                // No significant matches
+                diagnosisContainer.innerHTML = `
+        <div class="diagnosis-card">
+            <h3>No Significant Health Concerns Detected</h3>
+            <p>Based on the information you provided, we couldn't identify any specific health concerns. Your symptoms may be due to general fatigue or minor issues.</p>
+            
+            <div class="recommendations">
+                <h4><i class="fas fa-home"></i> General Home Care</h4>
+                <ul class="recommendation-list">
+                    <li>Stay hydrated by drinking plenty of water throughout the day</li>
+                    <li>Get adequate rest and ensure 7-8 hours of sleep</li>
+                    <li>Consume a balanced diet rich in fruits and vegetables</li>
+                    <li>Consider warm herbal tea with honey for general comfort</li>
+                </ul>
+            </div>
+            
+            <div class="recommendations">
+                <h4><i class="fas fa-first-aid"></i> Basic Care Steps</h4>
+                <ul class="recommendation-list">
+                    <li>Monitor your symptoms and keep track of any changes</li>
+                    <li>Take your temperature if you feel warm or experience chills</li>
+                    <li>Use over-the-counter pain relievers as directed if needed</li>
+                    <li>Rest and avoid strenuous activities until you feel better</li>
+                </ul>
+            </div>
+            
+            <div class="recommendations">
+                <h4><i class="fas fa-lightbulb"></i> General Recommendations</h4>
+                <ul class="recommendation-list">
+                    <li>Get plenty of rest and stay hydrated</li>
+                    <li>Maintain a balanced diet</li>
+                    <li>Consider over-the-counter pain relievers if needed</li>
+                    <li>Monitor your symptoms and consult a healthcare provider if they worsen</li>
+                </ul>
+            </div>
+        </div>
+    `;
+                return;
+            }
+            
+            // Display each disease
+            topDiseases.forEach(disease => {
+                const diagnosisCard = document.createElement('div');
+                diagnosisCard.className = 'diagnosis-card';
+                
+                // Create probability label
+                let probabilityLabel = 'Low';
+                if (disease.probability > 70) {
+                    probabilityLabel = 'High';
+                } else if (disease.probability > 40) {
+                    probabilityLabel = 'Moderate';
+                }
+                
+                diagnosisCard.innerHTML = `
+                    <h3>${disease.name} <span>${probabilityLabel} Match</span></h3>
+                    <p>${disease.description}</p>
+                    
+                    <div class="medicines-list">
+                        <h4><i class="fas fa-pills"></i> Recommended Medicines</h4>
+                        ${disease.medicines.map(medicine => `
+                            <div class="medicine-item">
+                                <div class="medicine-info">
+                                    <h5>${medicine.name}</h5>
+                                    <p>${medicine.description}</p>
+                                </div>
+                                <div class="medicine-dosage">${medicine.dosage}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="recommendations">
+                        <h4><i class="fas fa-home"></i> Home Solutions</h4>
+                        <ul class="recommendation-list">
+                            ${disease.homeSolutions.map(solution => `<li>${solution}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="recommendations">
+                        <h4><i class="fas fa-first-aid"></i> First Aid Steps</h4>
+                        <ul class="recommendation-list">
+                            ${disease.firstAid.map(step => `<li>${step}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <div class="recommendations">
+                        <h4><i class="fas fa-lightbulb"></i> General Recommendations</h4>
+                        <ul class="recommendation-list">
+                            ${disease.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                
+                diagnosisContainer.appendChild(diagnosisCard);
+            });
+            
+            // Add disclaimer
+            const disclaimer = document.createElement('div');
+            disclaimer.className = 'form-section';
+            disclaimer.style.marginTop = '30px';
+            disclaimer.innerHTML = `
+                <h4 style="color: var(--primary-color); margin-bottom: 10px;">Important Disclaimer</h4>
+                <p style="font-size: 0.9rem; color: var(--accent-dark);">
+                    This assessment is for informational purposes only and is not a substitute for professional medical advice, diagnosis, or treatment. 
+                    Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
+                </p>
+            `;
+            
+            diagnosisContainer.appendChild(disclaimer);
+        }
+
+        // Reset the form
+        function resetForm() {
+            // Reset personal info
+            fullName.value = '';
+            email.value = '';
+            phone.value = '';
+            age.value = '';
+            gender.value = '';
+            saveLoginInfo.checked = false;
+            
+            // Reset vital signs
+            temperature.value = '';
+            oxygenLevel.value = '';
+            heartRate.value = '';
+            bloodPressure.value = '';
+            
+            // Reset symptoms
+            symptomCheckboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            symptomItems.forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            symptomDuration.value = '';
+            additionalSymptoms.value = '';
+            
+            // Reset error messages
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(msg => {
+                msg.style.display = 'none';
+            });
+            
+            // Show form container
+            document.querySelector('.form-container').style.display = 'block';
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
